@@ -47,7 +47,7 @@ Begleitung durch eine KI-Session: [prompts/linux-umzug-begleiter.md](prompts/lin
 ## Phase D: Umzug der Arbeit
 
 - [ ] **D1** Git, SSH-Schlüssel bzw. GitHub CLI (`gh`) einrichten.
-- [ ] **D2** Prüfen, ob es die Claude-Desktop-App mit Code-Tab für Linux gibt (Claude Code selbst ist seit C0 da).
+- [ ] **D2** Prüfen, ob es die Claude-Desktop-App mit Code-Tab für Linux gibt (Claude Code selbst ist seit C0 da). Hinweis vom 17.10.2026: Die Claude-Code-Doku verlinkt eine Linux-Version der Desktop-App ([code.claude.com/docs/en/desktop-linux](https://code.claude.com/docs/en/desktop-linux)), noch nicht geprüft.
 - [ ] **D3** IntelliJ IDEA (über die JetBrains Toolbox), passendes JDK für die Minecraft-Version von Smart Villagers, Gradle läuft über das Projekt.
 - [ ] **D4** Smart Villagers klonen, bauen und den Test-Client starten (`runClient`).
 - [ ] **D5** Prism Launcher installieren, Minecraft-Instanzen, Mods und Welten übernehmen. Spielen testen.
