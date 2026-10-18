@@ -10,7 +10,7 @@
 - **Qualität** (folgt daraus, dass Claude Code programmiert):
   - `cargo fmt` und `cargo clippy -- -D warnings` sauber; Tests gehören zu jedem Baustein.
   - `unsafe` nur in wenigen kleinen Modulen (dmabuf-Import, Vulkan-Interop), jedes mit Kommentar zur Sicherheitsbegründung.
-- **T17 Lizenz 0BSD:** `LICENSE` kommt mit dem ersten Code ins Repository. Abhängigkeiten unter MIT oder Apache (Smithay, wgpu) sind in Ordnung.
+- **T17 Lizenz 0BSD:** `LICENSE` kommt mit dem ersten Code ins Repository. Abhängigkeiten unter freizügigen Lizenzen (MIT, Apache, BSD, Zlib, ISC) sind in Ordnung, Copyleft nicht (Nutzer 18.10.2026).
 - **T18 Installationsort:** Linux in 500 GB auf der NVMe-SSD mit eigener EFI-Partition (die von Windows hat nur 100 MB), damit Windows später ohne Umbau gelöscht werden kann. Details: [linux-umzug.md](linux-umzug.md).
 - **Hardware:** RTX 5060 Ti (Blackwell) mit 16 GB VRAM; NVMe-SSD WD_BLACK SN850X 2 TB; HDD Toshiba 1 TB (D:).
 
@@ -29,7 +29,7 @@ Details, Empfehlung und Hinweise stehen in der genannten Meilenstein-Datei.
 | T7 | Quelle für Blockdaten außerhalb der Assets | offen | m1 |
 | T8 | Render-Pipeline forward/deferred | offen | [m2](implementierung/m2-minecraft-look.md) |
 | T9 | Datenstruktur Chunks/Meshes, Mesh-Cache | offen | m1 |
-| T10 | Bildtaktung je Zustand | offen, Empfehlung vorhanden | m0 |
+| T10 | Bildtaktung je Zustand | offen, Empfehlung vorhanden; erster Performance-Durchgang | m0 |
 | T11 | Fensterauflösung und Größenaushandlung | offen, Empfehlung vorhanden | m0 |
 | T12 | Identität der Welt (m1), Verankerung der Screens (m3) | offen | m1, [m3](implementierung/m3-fenster-in-der-welt.md) |
 | T13 | Bewegungsmodell (F4) | offen | m1 |
@@ -55,7 +55,9 @@ Während der Entwicklung läuft alles als Fenster in einem Host-Desktop, der die
 
 ## 3 Meilensteine
 
-Reihenfolge: M0 (vor allem der Fenster-Prototyp) → M1 und M2 als normale Linux-Anwendung, noch nicht als Shell, damit früh Ergebnisse sichtbar sind → M3 im selben Rahmen → M4, M5 → M6, M7, M8 → M9 nach dem Release.
+Reihenfolge (Nutzer 18.10.2026): M0 bis A5 → **M8 Teil 1**: eigene Login-Sitzung mit der Testszene statt der Welt (siehe m8) → M1 und M2 als normale Linux-Anwendung → M3 → M4, M5 → M6, M7, Rest von M8 → M9 nach dem Release.
+
+**Performance-Durchgang** (Nutzer 18.10.2026): Performance ist sonst kein Abnahmekriterium. Nach jedem Meilenstein (auch nach M8 Teil 1): Last im Leerlauf, Bilder/s und VRAM messen, Ausreißer beheben, Werte in der Meilenstein-Datei festhalten. Der erste Durchgang übernimmt A6 aus m0 (P11, P12, T10).
 
 | Datei | Inhalt |
 | ----- | ------ |

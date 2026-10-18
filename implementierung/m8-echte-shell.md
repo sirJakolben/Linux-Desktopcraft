@@ -1,12 +1,13 @@
 # M8: Echte Shell
 
 **Planungsstand:** grob, nicht bereit.
+- **Teil 1 vorgezogen** direkt nach M0 A5 (Nutzer 18.10.2026): eigene Login-Sitzung (DRM/KMS, libinput, libseat, wgpu-Ausgabe auf DRM = P15), GNOME-Sitzung als Notfall (Kern 1), zunächst mit der Testszene aus m0 statt der Welt. Vor der Umsetzung konkretisieren.
 - Recherche fehlt: R30.
 - Fragen an den Nutzer fehlen: F11 (Shell-Grundfunktionen).
 - Hängt von allen vorigen Meilensteinen ab.
 
 **Größe:** 3–8 Wochen, Risiko hoch.
-**Voraussetzung:** M3 und M4.
+**Voraussetzung:** Teil 1: M0 bis A5. Rest: M3 und M4.
 **Features:** [features.md](../features.md) §1 (PC startet in der Welt), §8 (System). **Belege:** recherche-ergebnisse.md R5, R6, R14.
 
 ## Ziel

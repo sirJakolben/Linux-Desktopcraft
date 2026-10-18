@@ -14,7 +14,8 @@ Ergebnis von M0 sind Wegwerf-Prototypen, Messwerte und Entscheidungen, noch kein
 
 1. **Fensterpuffer ohne Kopie in die 3D-Szene** (dmabuf nach wgpu, P2), **mit Explicit Sync auf NVIDIA** (P3). Scheitert das, greift der Rückfall von T1.
 2. **Eingabe zurück ins Fenster:** Raycast, dann UV, dann Surface-Koordinate, dann `wl_pointer` (P5). Dazu gehören Pop-ups und Menüs (P6), denn ohne sie ist kein echtes Programm bedienbar.
-3. **Messbar geringe Last:** Im Leerlauf kein einziges Neuzeichnen (P12) und Drosselung entfernter Fenster (P11). „Kaum Last" ist ein Kernversprechen des Projekts.
+
+Performance (Last, Bildtaktung: A6, P11, P12, T10) ist aus M0 ausgeklammert → Performance-Durchgang ([implementierungsplan.md](../implementierungsplan.md) §3).
 
 ## Entscheidungen
 
@@ -33,7 +34,7 @@ Noch offen, werden durch Prototypen bestätigt:
 
 | Nr. | Frage | Empfehlung | Bestätigt durch |
 | --- | ----- | ---------- | --------------- |
-| T10 | Bildtaktung | Leerlauf: 0 Bilder. Stille Kamera mit Animationen: 20 Hz. Bewegung: volle Rate. Vollbild: Direct Scanout | P11–P13 |
+| T10 | Bildtaktung | Leerlauf: 0 Bilder. Stille Kamera mit Animationen: 20 Hz. Bewegung: volle Rate. Vollbild: Direct Scanout | P11–P13, im Performance-Durchgang |
 | T11 | Fenstergröße und Auflösung | logische Größe und Skala (`fractional-scale-v1`) unabhängig von der Blockgröße; Pixeldichte pro Block einstellbar (16 px reichen für Text nicht; Waylandcraft nimmt standardmäßig 500 px pro Block); übergroße Puffer einpassen | P4, P7 |
 
 ## Technischer Rahmen
@@ -118,7 +119,7 @@ Reihenfolge = Priorität. Nach jeder Teilaufgabe Ergebnis unten unter „Ergebni
 | A3 | dmabuf-Import ohne Kopie, dmabuf-Feedback, `drm_syncobj` | P2, P3 | Firefox und vkcube auf Quads; vkcube 5 min ohne Flackern (Video); Log nennt Modifier und Sync-Weg |
 | A4 | Raycast-Eingabe: Zeiger, Klick, Scrollen, Tastatur mit Fokus per Klick und Fluchttaste | P5 | GTK4- und Qt-Programm schräg bedienbar, Randknöpfe treffen, Text tippen geht |
 | A5 | Pop-ups mit Grab und Constraint-Fläche | P6 | Kontextmenü, Combobox, verschachteltes Menü, Tooltip in GTK4, Qt und Firefox (Screenshots) |
-| A6 | Bildtaktung: Leerlauf, Drosselung | P12, P11 | Messwerte Redraws/s und CPU/GPU-Last vorher/nachher |
+| A6 | Bildtaktung: Leerlauf, Drosselung. **Verschoben** in den ersten Performance-Durchgang | P12, P11 | Messwerte Redraws/s und CPU/GPU-Last vorher/nachher |
 | A7 | Demo für die Abnahme von M0 | – | siehe „Abnahme von M0" |
 | A8 | W-Tests, soweit Zeit bleibt | P4, P7, P10, P16 | je Erfolgskriterium der Tabelle; Rest wandert nach M3 |
 
@@ -131,7 +132,7 @@ Priorität: **K** = Kern, entscheidet über den Fortgang oder den Rückfall von 
 | Nr. | Prio | Test | Erfolgskriterium |
 | --- | ---- | ---- | ---------------- |
 | P1 | W | shm-Clients (`weston-simple-shm`, foot) auf einem Quad | Inhalt und Farben korrekt, Update unter einem Frame Verzögerung |
-| P2 | K | dmabuf ohne Kopie (Firefox, vkcube, `weston-simple-dmabuf-egl`) über `texture_from_dmabuf_fd` | korrektes Bild bei mindestens 2 Modifiern, keine CPU-Kopie im Profiler |
+| P2 | K | dmabuf ohne Kopie (Firefox, vkcube, `weston-simple-dmabuf-egl`) über `texture_from_dmabuf_fd` | korrektes Bild bei mindestens 2 Modifiern |
 | P3 | K | Explicit Sync mit einem NVIDIA-Client | kein Flackern und kein Tearing bei vkcube mit 60 fps über 5 min |
 | P4 | W | Mip-Kette und anisotrope Filterung, 1080p-Fenster unter 70° | Text in 2–3 Blöcken Abstand lesbar, kein Flimmern, unter 1 ms GPU pro Update |
 | P5 | K | Raycast-Klick auf Schaltflächen am Rand eines GTK4- und eines Qt-Programms, auch schräg | pixelgenau (±1 px), Hover-Effekte stimmen |
@@ -156,9 +157,8 @@ Priorität: **K** = Kern, entscheidet über den Fortgang oder den Rückfall von 
   - Text tippen
   - scrollen
   Nachweis per Video oder Screenshots.
-- **Messwerte** von P11 und P12 stehen unten unter „Ergebnisse".
-- Alle **K-Tests** sind bestanden, oder ein dokumentierter Rückfall ist gewählt.
-- **T10 und T11** sind entschieden, ihr Status im T-Verzeichnis ([implementierungsplan.md](../implementierungsplan.md)) ist aktualisiert.
+- Alle **K-Tests** außer P12 (verschoben) sind bestanden, oder ein dokumentierter Rückfall ist gewählt.
+- **T11** ist entschieden, sein Status im T-Verzeichnis ([implementierungsplan.md](../implementierungsplan.md)) ist aktualisiert.
 
 ## Offene Fragen an den Nutzer
 
@@ -207,4 +207,4 @@ Start: `cargo run -- --spawn foot` in `prototypen/`; Optionen: `cargo run -- --h
 - Farben korrekt: Truecolor-Orange (255,128,0) aus `prototypen/scripts/color-test.sh` erscheint orange. Screenshots: `assets/m0/a2-foot-farbtest.png`, `assets/m0/a2-foot-simple-shm.png` (beide Clients gleichzeitig, schräge Quads).
 - **P1 offen:** „Update unter einem Frame Verzögerung" nicht gemessen.
 - **Für M3:** nur Damage hochladen; Subsurfaces und Pop-ups zeichnen (bisher nur die Root-Surface); Alpha-Blending.
-- **Offene Frage Lizenz:** Transitive Abhängigkeiten unter BSD-2/BSD-3, Zlib, ISC (u. a. tiny-skia über winits Fensterdeko), kein Copyleft. T17 nennt nur MIT/Apache; ob permissive Lizenzen allgemein erlaubt sind, bestätigt der Nutzer.
+- Transitive Abhängigkeiten unter BSD-2/BSD-3, Zlib, ISC (u. a. tiny-skia über winits Fensterdeko): erlaubt nach T17.
