@@ -145,7 +145,7 @@ Priorität: **K** = Kern, entscheidet über den Fortgang oder den Rückfall von 
 | P12 | K | Leerlauf ohne Eingabe und ohne Änderungen | 0 Redraws pro Sekunde |
 | P13 | S | Vollbild-Spiel mit Direct Scanout | Weltrenderer steht still, fps wie unter GNOME |
 | P14 | S | DRM-Video (Netflix in Firefox) als Wandtextur | feststellen, ob das Bild schwarz wird |
-| P15 | S | wgpu rendert in einen Puffer, den Smithays DRM-Ausgabe anzeigt (eigenes TTY, nicht nested) | Bild auf dem Bildschirm ohne Kopie |
+| P15 | S | wgpu rendert in einen Puffer, den Smithays DRM-Ausgabe anzeigt (erst VM, dann eigenes TTY; m8 S3, S5) | Bild auf dem Bildschirm ohne Kopie |
 | P16 | W | eine echte Regionsdatei aus der Welt des Nutzers (26.x) lesen, einen Chunk im Worker-Thread zu einem Mesh bauen | fastanvil oder simdnbt liest das Format; Grundlage für T6 und T9 |
 | P17 | S | RenderDoc-Mitschnitt des nested Renderers | Mitschnitt funktioniert |
 

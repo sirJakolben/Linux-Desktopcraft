@@ -51,13 +51,19 @@ Cargo-Workspace:
 | `compositor` | Smithay; bindet `world` ein | M0 (Prototyp), M3 |
 | `shell` | Hotbar, Inventar, Kisten, Explorer | M4 |
 
-Während der Entwicklung läuft alles als Fenster in einem Host-Desktop, der die Super-Taste abfängt. Die Modifier-Taste der Shell ist deshalb konfigurierbar.
+Während der Entwicklung (Phase 1 der Testreihenfolge, Abschnitt 3) läuft alles als Fenster in einem Host-Desktop, der die Super-Taste abfängt. Die Modifier-Taste der Shell ist deshalb konfigurierbar.
 
 ## 3 Meilensteine
 
 Reihenfolge (Nutzer 18.10.2026): M0 bis A5 → **M8 Teil 1**: eigene Login-Sitzung mit der Testszene statt der Welt (siehe m8) → M1 und M2 als normale Linux-Anwendung → M3 → M4, M5 → M6, M7, Rest von M8 → M9 nach dem Release.
 
 **Performance-Durchgang** (Nutzer 18.10.2026): Performance ist sonst kein Abnahmekriterium. Nach jedem Meilenstein (auch nach M8 Teil 1): Last im Leerlauf, Bilder/s und VRAM messen, Ausreißer beheben, Werte in der Meilenstein-Datei festhalten. Der erste Durchgang übernimmt A6 aus m0 (P11, P12, T10).
+
+**Testreihenfolge** (Nutzer 18.10.2026), für jeden Meilenstein, der Sitzung, Hardware oder Systemstart berührt; die nächste Phase erst, wenn die vorige stabil läuft:
+1. **Nested:** als Fenster im GNOME-Desktop, aus einem Terminal gestartet; Logs dort. Standard für alle Entwicklung, Abstürze treffen nur das Fenster.
+2. **VM:** QEMU/KVM mit eigenem Gast: Verhalten als Sitzung beim Booten (Anmeldebildschirm, Absturz, Konsolenwechsel), ohne den echten Desktop zu gefährden. Der Gast hat keine NVIDIA-Karte; NVIDIA-Eigenheiten erst in Phase 3.
+3. **Freie Konsole:** auf der echten Hardware von einem TTY (Strg+Alt+F3) starten, GNOME läuft daneben weiter.
+4. **Generaltest:** als echte Login-Sitzung im Alltag.
 
 | Datei | Inhalt |
 | ----- | ------ |
