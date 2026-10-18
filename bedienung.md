@@ -1,7 +1,7 @@
 # Bedienung
 
 Wie der Nutzer die Features aus [features.md](features.md) bedient. „Win" = Super-Taste.
-Inhalt: Grundregeln · Tasten · Kamera und Waypoints · Screens · Hotbar und Symbolleiste · Inventar, Kisten, offene Anwendungen · Drei Ansichten · 2D-Modus · Portal, Einstellungen, Banner · Offene Fragen D1–D15
+Inhalt: Grundregeln · Tasten · Kamera und Waypoints · Screens · Hotbar und Symbolleiste · Inventar, Kisten, offene Anwendungen · Drei Ansichten · 2D-Modus · Portal, Einstellungen, Banner · Offene Fragen D1a–D15
 
 ## Grundregeln
 
@@ -78,26 +78,24 @@ Inhalt: Grundregeln · Tasten · Kamera und Waypoints · Screens · Hotbar und S
 ## Portal, Einstellungen, Banner
 
 - **Portal-Symbol:** öffnet die Weltenauswahl (Raster mit Vorschaubild je Welt). Klick auf eine Welt wechselt dorthin, mit violetter Überblendung. Daneben je Welt ein Knopf, der sie im echten Minecraft startet (D15).
-- **Einstellungssymbol:** öffnet die Einstellungen (Mobs, KI-Stufe; D8, D14).
+- **Einstellungssymbol:** öffnet die Einstellungen (Mobs, KI-Stufe; D14).
 - **Weltupdate-Banner:** oben links nach dem Beenden von Minecraft; Fortschritt, am Ende Haken („gespeichert").
 
 ## Offene Fragen
 
-| Nr. | Frage |
-| --- | ----- |
-| D1 | Hotbar: 9 Slots, die wachsen, oder von Anfang an mehr? Was öffnet das Kistensymbol daneben (laut Symbolleiste: den Explorer)? |
-| D1a | Kisten/Explorer: Wo werden freie Item-Positionen gespeichert (versteckte Datei im Ordner, zentrale Datenbank, erweiterte Dateiattribute)? Was passiert mit Ordnern, die außerhalb des eigenen Explorers verändert werden? Aussehen und Optionen des Explorers (kommen vom Nutzer). |
-| D2 | Brauchen Doppelklick auf Waypoint und auf Screen die Win-Taste? Was bewirkt ein einfacher Klick ohne Win auf einen fernen Screen (bedienen oder nähertreten)? |
-| D3 | Waypoints: Was passiert beim Laufen aus einer unverbundenen Seite (frei weiter oder nichts)? Mehrere Verbindungen pro Seite? Darf ein neuer Waypoint beliebig weit entfernt liegen? |
-| D4 | Randpfeile an allen vier Rändern oder nur links und rechts? |
-| D5 | Freisteuerung: normales WASD ohne Win und Maus als Kamera mit Zeigersperre? Wirkt Win + Doppelklick auf den Boden weiter? |
-| D6 | Screens: Inhalt und Auflösung beim Aufziehen? Bleibt der Wandplatz minimierter Fenster als leerer Rahmen? Programme mit Mindestgröße: Fenster in den 1×1-Screen hineinskalieren (mit Rand) oder Fenstergröße an den Screen anpassen? |
-| D7 | Banner: nur Fortschritt und Haken oder auch eine Zusammenfassung der Änderungen? |
-| D8 | Mob-Einstellungen: welche Stufen genau (Haustiere, benannte, passive, Liste)? |
-| D9 | Wo erscheint ein neues Fenster oder ein Dialog (Vollbild, nächste freie Wand, zuerst in der Hotbar)? Wie werden Kontextmenüs, Dropdowns und Tooltips gezeigt, die über den Screen hinausragen? |
-| D10 | Tastaturfokus: Welcher Screen bekommt die Tasten (zuletzt angeklickt, unter dem Zeiger)? Wie gibt ein Programm, das alle Tasten abfängt (Spiel, Terminal), die Steuerung zurück (Fluchttaste)? Vorbilder: Waylandcraft (`G`, `Alt+Q`), SimulaVR (Super+Z). |
-| D11 | Woran ist die zentrierte Kamera ausgerichtet (waagerechter Blick entlang einer Himmelsrichtung)? |
-| D12 | Drei Ansichten: Bleibt das Glow-Icon in der Hotbar, wenn ein Klick das Desktop-Fenster öffnet (nur Ziehen entfernt es)? Aussehen und genaue Position des Symbols „Offene Anwendungen"? Zeigen Wand-Screen und Desktop-Fenster gleichzeitig dasselbe Fenster: welche Größe, wer bekommt die Eingabe? |
-| D13 | Mini-Desktops: Bleiben die Fenster beim Schließen eines Mini-Desktops als Icon in der Hotbar? Wechseln auch Win + A und Win + D in die Welt (eine frühere Fassung nannte A/S/D)? Wird ein Wand-Screen per Doppelklick zum normalen Fenster oder zum Vollbild? Wie werden Fenster im 2D-Modus angeordnet, was bleibt nach dem Zurückholen erhalten? Später mehr als zwei Plätze? |
-| D14 | Gehört das Einstellungssymbol in die Symbolleiste? Wie sieht die Oberfläche im Minecraft-Modus aus? |
-| D15 | Aussehen des Knopfs „in Minecraft starten". |
+| Nr. | Frage                                                                                                                                                                                                                                                                                                                                                                           |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1a | Kisten/Explorer: Wo werden freie Item-Positionen gespeichert (versteckte Datei im Ordner, zentrale Datenbank, erweiterte Dateiattribute)? Was passiert mit Ordnern, die außerhalb des eigenen Explorers verändert werden? Aussehen und Optionen des Explorers (kommen vom Nutzer).                                                                                              |
+| D2  | Brauchen Doppelklick auf Waypoint und auf Screen die Win-Taste? Was bewirkt ein einfacher Klick ohne Win auf einen fernen Screen (bedienen oder nähertreten)?                                                                                                                                                                                                                   |
+| D3  | Waypoints: Was passiert beim Laufen aus einer unverbundenen Seite (frei weiter oder nichts)? Mehrere Verbindungen pro Seite? Darf ein neuer Waypoint beliebig weit entfernt liegen?                                                                                                                                                                                             |
+| D4  | Randpfeile an allen vier Rändern oder nur links und rechts?                                                                                                                                                                                                                                                                                                                     |
+| D5  | Freisteuerung: normales WASD ohne Win und Maus als Kamera mit Zeigersperre? Wirkt Win + Doppelklick auf den Boden weiter?                                                                                                                                                                                                                                                       |
+| D6  | Screens: Inhalt und Auflösung beim Aufziehen? Bleibt der Wandplatz minimierter Fenster als leerer Rahmen? Programme mit Mindestgröße: Fenster in den 1×1-Screen hineinskalieren (mit Rand) oder Fenstergröße an den Screen anpassen?                                                                                                                                            |
+| D7  | Banner: nur Fortschritt und Haken oder auch eine Zusammenfassung der Änderungen?                                                                                                                                                                                                                                                                                                |
+| D9  | Wo erscheint ein neues Fenster oder ein Dialog (Vollbild, nächste freie Wand, zuerst in der Hotbar)? Wie werden Kontextmenüs, Dropdowns und Tooltips gezeigt, die über den Screen hinausragen?                                                                                                                                                                                  |
+| D10 | Tastaturfokus: Welcher Screen bekommt die Tasten (zuletzt angeklickt, unter dem Zeiger)? Wie gibt ein Programm, das alle Tasten abfängt (Spiel, Terminal), die Steuerung zurück (Fluchttaste)? Vorbilder: Waylandcraft (`G`, `Alt+Q`), SimulaVR (Super+Z).                                                                                                                      |
+| D11 | Woran ist die zentrierte Kamera ausgerichtet (waagerechter Blick entlang einer Himmelsrichtung)?                                                                                                                                                                                                                                                                                |
+| D12 | Drei Ansichten: Bleibt das Glow-Icon in der Hotbar, wenn ein Klick das Desktop-Fenster öffnet (nur Ziehen entfernt es)? Aussehen und genaue Position des Symbols „Offene Anwendungen"? Zeigen Wand-Screen und Desktop-Fenster gleichzeitig dasselbe Fenster: welche Größe, wer bekommt die Eingabe?                                                                             |
+| D13 | Mini-Desktops: Bleiben die Fenster beim Schließen eines Mini-Desktops als Icon in der Hotbar? Wechseln auch Win + A und Win + D in die Welt (eine frühere Fassung nannte A/S/D)? Wie werden Fenster im 2D-Modus angeordnet, was bleibt nach dem Zurückholen erhalten? Später mehr als zwei Plätze? |
+| D14 | Gehört das Einstellungssymbol in die Symbolleiste? Wie sieht die Oberfläche im Minecraft-Modus aus?                                                                                                                                                                                                                                                                             |
+| D15 | Aussehen des Knopfs „in Minecraft starten".                                                                                                                                                                                                                                                                                                                                     |
