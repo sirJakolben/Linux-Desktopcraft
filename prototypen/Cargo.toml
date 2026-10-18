@@ -1,0 +1,26 @@
+[workspace]
+members = ["nested"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+license = "0BSD"
+publish = false
+
+[workspace.dependencies]
+# Pinned git revision until wgpu 31 is released (needs the queue family
+# ownership transfer from PR #9668, which is not in 30.0.1).
+wgpu = { git = "https://github.com/gfx-rs/wgpu", rev = "efcf445784dd31537f09bc61bad27431de713fce" }
+smithay = { git = "https://github.com/Smithay/smithay", rev = "023b78b1c5a05ca512767cacc07efca55fae8be4", default-features = false, features = ["wayland_frontend", "backend_drm"] }
+winit = "0.30.13"
+glam = "0.30"
+bytemuck = { version = "1", features = ["derive"] }
+pollster = "0.4"
+png = "0.18"
+rustix = { version = "1", features = ["event"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Dependencies optimized even in debug builds (shm uploads, wgpu validation).
+[profile.dev.package."*"]
+opt-level = 2

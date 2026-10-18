@@ -1,6 +1,6 @@
 # M0: Entscheidungen und Prototypen
 
-**Planungsstand:** bereit (18.10.2026). Vor A1 muss der Nutzer den Einrichtungsbefehl E1 ausführen.
+**Planungsstand:** bereit (18.10.2026). E1 ausgeführt, A1–A2 erledigt (18.10.2026).
 **Größe:** 1–3 Wochen, Risiko hoch.
 **Voraussetzung:** Linux-Umzug erledigt; Einrichtung E1.
 
@@ -102,10 +102,10 @@ Wo neue Fenster erscheinen, welcher Screen die Tastatur bekommt und wie man sie 
 **E1** (Nutzer, root, einmal im Terminal):
 
 ```bash
-sudo dnf install rust cargo clippy rustfmt wayland-devel libxkbcommon-devel libinput-devel systemd-devel libseat-devel mesa-libgbm-devel libdrm-devel vulkan-tools vulkan-validation-layers weston foot xwayland-satellite mpv gtk4-devel-tools qt6-qtbase-examples xorg-x11-apps renderdoc
+sudo dnf install rust cargo clippy rustfmt wayland-devel libxkbcommon-devel libinput-devel systemd-devel libseat-devel mesa-libgbm-devel libdrm-devel vulkan-tools vulkan-validation-layers weston foot xwayland-satellite mpv gtk4-devel-tools qt6-qtbase-examples xeyes renderdoc weston-demo
 ```
 
-Testprogramme darin: `weston-simple-shm`, `weston-simple-dmabuf-egl` (weston), foot, `vkcube` (vulkan-tools), `gtk4-demo` (gtk4-devel-tools), Qt-Beispiele, mpv, `xeyes` (xorg-x11-apps), RenderDoc. Firefox ist vorinstalliert. Abnahme: `cargo --version` und `vkcube` laufen.
+Testprogramme darin: `weston-simple-shm`, `weston-simple-dmabuf-egl` (weston-demo, nicht im Paket weston), foot, `vkcube` (vulkan-tools), `gtk4-demo` (gtk4-devel-tools), Qt-Beispiele, mpv, `xeyes`, RenderDoc. Firefox ist vorinstalliert. Abnahme: `cargo --version` und `vkcube` laufen.
 
 ## Teilaufgaben
 
@@ -185,3 +185,26 @@ D6, D9, D10 ([bedienung.md](../bedienung.md)): In M0 genügen Platzhalter, für 
 ## Ergebnisse
 
 Wird während M0 gefüllt: Messwerte, Screenshots, gewählte Rückfälle, Erkenntnisse für M3.
+
+Start: `cargo run -- --spawn foot` in `prototypen/`; Optionen: `cargo run -- --help`. Screenshots unter `assets/m0/`.
+
+### A1 (erledigt 18.10.2026)
+
+- Workspace `prototypen/`, eine Crate `nested`; `LICENSE` (0BSD) im Repo-Root.
+- Feste Stände: wgpu Git `efcf445784dd` (enthält `queue_family_ownership_transfer`), Smithay Git `023b78b1c5a0` (Features wie „Technischer Rahmen"), winit 0.30.13. Abhängigkeiten in Debug-Builds mit `opt-level = 2`.
+- GPU: RTX 5060 Ti über Vulkan, Treiber 615.71.09; Surface-Format `Rgba8UnormSrgb`, Present `AutoVsync`.
+- Kamera frei beweglich, Steuerung in `--help`. Maus wird per Locked gefangen, sonst Confined.
+- Gezeichnet wird nur auf Ereignis (`ControlFlow::Wait`), Basis für P12; nicht gemessen.
+- Screenshot: `assets/m0/a1-szene.png`.
+
+### A2 (erledigt 18.10.2026), P1 teilweise
+
+- Smithay im selben Prozess. Socket `wayland-N`, erster freie ab 1. Ein Hilfsthread pollt Display- und Socket-fd und weckt winit per `EventLoopProxy`; kein calloop.
+- Globals: compositor, xdg-shell, xdg-decoration (immer serverseitig), shm, wl_seat (Tastatur + Zeiger, Eingabe kommt mit A4), wl_output, data-device. foot startet ohne `wl_data_device_manager` nicht.
+- shm-Formate: ARGB/XRGB8888 → `Bgra8UnormSrgb`, ABGR/XBGR8888 → `Rgba8UnormSrgb`. Alpha wird ignoriert (Inhalt vor Schwarz).
+- Platzhalter D9: neues Fenster auf nächstes freies Quad, `configure` 1024×640, Tiled-States auf allen Seiten. Quad übernimmt das Seitenverhältnis des Puffers.
+- Upload: ganzer Puffer per `write_texture` bei jedem Commit; Frame-Callbacks nach jedem gezeichneten Bild.
+- Farben korrekt: Truecolor-Orange (255,128,0) aus `prototypen/scripts/color-test.sh` erscheint orange. Screenshots: `assets/m0/a2-foot-farbtest.png`, `assets/m0/a2-foot-simple-shm.png` (beide Clients gleichzeitig, schräge Quads).
+- **P1 offen:** „Update unter einem Frame Verzögerung" nicht gemessen.
+- **Für M3:** nur Damage hochladen; Subsurfaces und Pop-ups zeichnen (bisher nur die Root-Surface); Alpha-Blending.
+- **Offene Frage Lizenz:** Transitive Abhängigkeiten unter BSD-2/BSD-3, Zlib, ISC (u. a. tiny-skia über winits Fensterdeko), kein Copyleft. T17 nennt nur MIT/Apache; ob permissive Lizenzen allgemein erlaubt sind, bestätigt der Nutzer.

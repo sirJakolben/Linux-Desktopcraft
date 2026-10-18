@@ -1,6 +1,6 @@
 # Minecraft Shell
 
-Desktop-Shell als begehbare Minecraft-Welt: Ein eigener Renderer liest echte Weltdateien, Programme hängen als Screens an den Wänden eines Hauses. **Status: Planung, M0 bereit, noch kein Code.**
+Desktop-Shell als begehbare Minecraft-Welt: Ein eigener Renderer liest echte Weltdateien, Programme hängen als Screens an den Wänden eines Hauses. **Status: M0 läuft (A1–A2 erledigt), Prototypen in `prototypen/`.**
 
 ## Dateien
 
