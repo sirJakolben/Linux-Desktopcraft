@@ -3,27 +3,14 @@
 **Planungsstand:** grob, nicht bereit. Es fehlen:
 - R29: Mod-Formate, Modloader, Auswahl der Shader und deren Lizenzen.
 
-**Größe laut Featureliste:** nicht abschätzbar, Risiko sehr hoch. Wahrscheinlich eine der letzten Stufen.
+**Größe:** nicht abschätzbar, Risiko sehr hoch. Wahrscheinlich eine der letzten Stufen.
 **Voraussetzung:** M2. Die Render-Pipeline (T8) muss erweiterbar sein.
-
-> **Für die Implementierungs-KI:** Diese Datei enthält alles, was für M7 nötig ist. Globale Leitplanken stehen in [CLAUDE.md](../CLAUDE.md), Quellen in [recherche-ergebnisse.md](recherche-ergebnisse.md), Abschnitt R13.
-
-## Ziel
-
-- **Mods:** Ein Adapter liest aus Mods das Wichtige: Custom-Blöcke, Texturen, eventuell Custom-Mobs. Rezepte, Blockverhalten und Texturanimationen der Mods fallen weg.
-- **Shader:** Es gibt einen eingebauten Shader, vielleicht in mehreren Versionen. Dafür werden bekannte Minecraft-Shader-Packs in eigenen Shadercode übersetzt und verschlankt. Hat der Nutzer einen dieser Packs für sein echtes Minecraft installiert, nutzt die Shell ihn ebenfalls.
+**Features:** [features.md](../features.md) §3 „Mods, Shader, modifizierte Welten" (Ziel, Umfang des Adapters, Machbarkeit). **Belege:** recherche-ergebnisse.md R13.
 
 ## Kern: darauf kommt es an
 
 1. **Shader-Übersetzung** heißt im Kern Nachbauen. Shader-Packs sind mehrstufige OpenGL-Pipelines mit G-Buffern; die eigene Pipeline muss solche Durchgänge abbilden können.
 2. **Lizenzen:** Jeder Shader-Pack hat seine eigene Lizenz. Übersetzter Code fällt unter die Lizenz des Originals, und das Projekt steht unter 0BSD. Deshalb nur Packs mit verträglicher Lizenz oder ausdrücklicher Erlaubnis verwenden.
-3. **Mods:** Blöcke und Texturen aus den Asset-Dateien der Mods zu lesen ist machbar. Blöcke mit eigenem Darstellungscode und Mods, die das Rendering verändern, sind kaum machbar.
-
-## Entschieden
-
-- Eingebauter, eigener Shader. Übersetzte und verschlankte Versionen bekannter Shader bilden eine Liste unterstützter Shader, ähnlich wie bei den Mods.
-- Direkte Kompatibilität mit beliebigen Shader-Packs (OptiFine/Iris) ist **kein** Ziel.
-- Mod-Adapter: nur Custom-Blöcke, Texturen und eventuell Custom-Mobs.
 
 ## Technische Grundlagen
 

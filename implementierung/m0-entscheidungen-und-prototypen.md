@@ -1,10 +1,8 @@
 # M0: Entscheidungen und Prototypen
 
 **Planungsstand:** grob, noch nicht bereit. Es fehlen die Entscheidungen T1–T4 und T19, eine Priorisierung der Prototypen und R32/R33.
-**Größe laut Featureliste:** 1–3 Wochen, Risiko hoch.
+**Größe:** 1–3 Wochen, Risiko hoch.
 **Voraussetzung:** Linux-Umzug ([linux-umzug.md](../linux-umzug.md)) mindestens bis einschließlich NVIDIA-Treiber und Rust-Werkzeugen.
-
-> **Für die Implementierungs-KI:** Diese Datei enthält alles, was für M0 nötig ist. Globale Leitplanken (nur lesen, kein Mojang-Code, 0BSD, kein GPL-Code, der Nutzer liest keinen Code) stehen in [CLAUDE.md](../CLAUDE.md). Hintergründe und Quellen stehen in [recherche-ergebnisse.md](recherche-ergebnisse.md). Messwerte, Screenshots und Erkenntnisse kommen unten unter „Ergebnisse".
 
 ## Ziel
 
@@ -18,46 +16,28 @@ Ergebnis von M0 sind Wegwerf-Prototypen, Messwerte und Entscheidungen, noch kein
 2. **Eingabe zurück ins Fenster:** Raycast, dann UV, dann Surface-Koordinate, dann `wl_pointer` (P5). Dazu gehören Pop-ups und Menüs (P6), denn ohne sie ist kein echtes Programm bedienbar.
 3. **Messbar geringe Last:** Im Leerlauf kein einziges Neuzeichnen (P12) und Drosselung entfernter Fenster (P11). „Kaum Last" ist ein Kernversprechen des Projekts.
 
-## Entschieden
-
-- **Entwicklung direkt unter Linux**, auf einer 500-GB-Partition der NVMe-SSD. Windows bleibt übergangsweise im Dual Boot. Unter Windows lauffähig zu sein ist kein Ziel.
-- **Hardware:** RTX 5060 Ti (Blackwell) mit 16 GB VRAM.
-- **Lizenz 0BSD.** Die `LICENSE`-Datei kommt mit dem ersten Code ins Repository. Waylandcraft (GPL-3), niri (GPL-3) und Stardust (GPL-2) dienen nur als Anschauung, ihr Code wird nicht übernommen.
-- **Claude Code programmiert.** Der Nutzer prüft Verhalten, Screenshots und Messwerte, keinen Code.
-
 ## In M0 zu entscheiden
 
 | Nr. | Frage | Empfehlung | Wird bestätigt durch |
 | --- | ----- | ---------- | -------------------- |
 | T1 | Sprache und Grafik-API | **Rust + wgpu (≥ 30)**; rohes Vulkan über wgpu-hal nur für dmabuf und Sync. Rückfall: Smithays GlesRenderer (GLES 3) | P2, P3 |
 | T2 | Compositor-Bibliothek | **Smithay**, Git-Master auf einen geprüften Commit festgelegt. Rückfall: wlroots über FFI | P1–P6 |
-| T3 | Prozessaufteilung | **ein Prozess**; die Welt als eigene Crate hinter einer Schnittstelle, damit sie später in einen eigenen Prozess wandern kann | – |
-| T4 | Distribution | **Fedora KDE Plasma** mit NVIDIA 595 (offen) über RPM Fusion und Snapper. Die Umzugsanleitung geht schon davon aus | – |
+| T3 | Prozessaufteilung | **ein Prozess**; die Welt als eigene Crate hinter einer Schnittstelle, damit sie später in einen eigenen Prozess wandern kann. Notfallmodus zunächst über eine zweite Sitzung (m8) | – |
+| T4 | Distribution und Desktop | **Fedora KDE Plasma** mit NVIDIA 595 (offen) über RPM Fusion und Snapper. **Widerspruch:** Laut [linux-umzug.md](../linux-umzug.md) nutzt der Nutzer GNOME. Gilt Plasma noch (auch als Host für nested und als Notfallsitzung in m8)? | Nutzer |
 | T10 | Bildtaktung | Leerlauf: 0 Bilder. Stille Kamera mit Animationen: 20 Hz. Bewegung: volle Rate. Vollbild: Direct Scanout | P11–P13 |
-| T11 | Fenstergröße und Auflösung | logische Größe und Skala unabhängig von der Blockgröße; Pixeldichte pro Block einstellbar; übergroße Puffer einpassen | P7 |
+| T11 | Fenstergröße und Auflösung | logische Größe und Skala (`fractional-scale-v1`) unabhängig von der Blockgröße; Pixeldichte pro Block einstellbar (16 px reichen für Text nicht); übergroße Puffer einpassen | P7 |
 | T19 | Sprache im Code | offen (Englisch ist bei Rust üblich, Deutsch wäre für den Nutzer lesbar) | Nutzer |
 
 ## Technischer Rahmen (gilt, sobald T1–T3 bestätigt sind)
 
-- **Cargo-Workspace** mit diesen Crates:
-  - `welt`: Formate, Meshing, Renderer; ohne Abhängigkeit vom Compositor
-  - `viewer`: die Welt als normales Fenster, für M1 und M2
-  - `compositor`: Smithay
-  - `shell`: ab M4
-- **Prototypen** liegen getrennt unter `prototypen/` und dürfen unsauber sein.
-- **Nested-Entwicklung:** Der Compositor läuft über Smithays winit-Backend als Fenster in Plasma (Wayland).
-  - Plasma fängt die Super-Taste ab. Deshalb ist die Modifier-Taste der Shell konfigurierbar und während der Entwicklung eine andere.
-  - Das winit-Backend ist bei Hotkeys fehlerhaft (niri) und antwortet nested einen Frame zu spät (Smithay #2208).
-- **Qualität:**
-  - `cargo fmt` und `cargo clippy -- -D warnings` müssen sauber sein.
-  - Tests gehören zu jedem Baustein.
-  - `unsafe` bleibt auf wenige kleine Module beschränkt (dmabuf-Import, Vulkan-Interop), jedes mit einem Kommentar zur Sicherheitsbegründung.
+- Crates: [implementierungsplan.md](../implementierungsplan.md) §2. **Prototypen** liegen getrennt unter `prototypen/` und dürfen unsauber sein.
+- **Nested-Entwicklung:** Der Compositor läuft über Smithays winit-Backend als Fenster im Host-Desktop (Wayland; Plasma oder GNOME, T4). Das winit-Backend ist bei Hotkeys fehlerhaft (niri) und antwortet nested einen Frame zu spät (Smithay #2208).
 
 ## Unbedingt beachten
 
 ### NVIDIA
 
-- **Treiber:** Nur die offenen Kernelmodule, Production-Zweig 595. Die Feature-Branches ab 610 bringen eine Color-Pipeline mit, die manche Compositors stört.
+- **Treiber:** Nur die offenen Kernelmodule, Production-Zweig 595. Die Feature-Branches ab 610 bringen eine Color-Pipeline mit, die manche Compositors stört. **Widerspruch:** Installiert ist 615.71.09 (linux-umzug.md). Offen: bei 615 bleiben oder auf 595 zurück?
 - **Explicit Sync ist Pflicht** (`linux-drm-syncobj-v1`), sonst gibt es Grafikfehler, weil NVIDIA kein implizites Sync kann.
   - Smithays `drm_syncobj` von Anfang an einbauen und nur anbieten, wenn `supports_syncobj_eventfd()` true liefert.
   - Der `DrmSyncPointBlocker` hält einen Commit zurück, bis der Acquire-Fence signalisiert ist. Vermutlich muss wgpu deshalb keine fremden Semaphoren importieren (unsicher, R33).
@@ -87,13 +67,13 @@ Ergebnis von M0 sind Wegwerf-Prototypen, Messwerte und Entscheidungen, noch kein
   - `configure` ist nur ein Hinweis; Programme mit Mindestgröße liefern größere Puffer, die eingepasst werden.
   - Tiled-States setzen und serverseitige Dekoration anfordern (`xdg-decoration`), damit keine Schatten und Titelleisten an der Wand landen.
 - **Drosselung:**
-  - Frame-Callbacks zurückhalten bremst GTK, Qt, Browser und mpv.
+  - Frame-Callbacks zurückhalten bremst GTK, Qt, Browser und mpv. Offen: Eine frühere Fassung von m3 sagte, mpv rendere dann gar nicht mehr; P11 klärt das.
   - Spiele mit MAILBOX oder IMMEDIATE bremsen nicht; sie werden nur seltener abgetastet.
   - Die `fifo-v1`-Barriere für verdeckte Surfaces früher lösen.
 
 ### Platzhalter für offene Bedienfragen
 
-Wo neue Fenster erscheinen, welcher Screen die Tastatur bekommt und wie man sie zurückholt, ist noch offen (Designplan, Fragen 9 und 10). Im Prototyp gelten Platzhalter:
+Wo neue Fenster erscheinen, welcher Screen die Tastatur bekommt und wie man sie zurückholt, ist offen (D9, D10). Im Prototyp gelten Platzhalter:
 - neues Fenster auf das nächste freie Test-Quad
 - Fokus per Klick
 - feste Fluchttaste
@@ -132,19 +112,13 @@ Priorität: **K** = Kern, entscheidet über T1/T2 und den Fortgang. **W** = wich
   Nachweis per Video oder Screenshots.
 - **Messwerte** von P11 und P12 stehen unten unter „Ergebnisse".
 - Alle **K-Tests** sind bestanden, oder ein dokumentierter Rückfall ist gewählt.
-- **T1–T4, T10, T11 und T19** stehen in [implementierungsplan.md](../implementierungsplan.md) als entschieden, und die Meilenstein-Dateien sind angepasst.
+- **T1–T4, T10, T11 und T19** sind hier entschieden, ihr Status im T-Verzeichnis ([implementierungsplan.md](../implementierungsplan.md)) ist aktualisiert.
 
 ## Offene Fragen an den Nutzer
 
-- Designplan Frage 9: Wo erscheinen neue Fenster und Dialoge?
-- Designplan Frage 10: Tastaturfokus und Fluchttaste.
-- Designplan Frage 6: Fenstergröße auf kleinen Screens.
-
-In M0 genügen Platzhalter; für M3 muss die Antwort feststehen.
+D6, D9, D10 ([bedienung.md](../bedienung.md)): In M0 genügen Platzhalter, für M3 müssen sie feststehen. Dazu T4, T19 und der NVIDIA-Zweig.
 
 ## Referenzen
-
-Technik anschauen, keinen Code übernehmen, außer bei MIT- oder Apache-Lizenz.
 
 - **wgpu und Smithay:**
   - [wgpu-hal `texture_from_dmabuf_fd`](https://docs.rs/wgpu-hal/30.0.0/wgpu_hal/vulkan/struct.Device.html)

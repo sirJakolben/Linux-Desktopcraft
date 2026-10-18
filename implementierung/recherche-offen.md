@@ -1,14 +1,6 @@
 # Offene Recherchen
 
-Stand: 16.10.2026
-
-> **Für KI-Sessions:** Liste der Recherchen, die noch ausstehen, sortiert nach Meilenstein. Vor dem Konkretisieren eines Meilensteins werden seine Punkte abgearbeitet. **Ablauf, wenn eine Recherche fertig ist:**
->
-> 1. Den Fund mit Quellen in [recherche-ergebnisse.md](recherche-ergebnisse.md) eintragen.
-> 2. Was für die Umsetzung wichtig ist, in die betroffene Meilenstein-Datei übernehmen.
-> 3. Den Punkt hier löschen.
->
-> Die Nummern (R…) bleiben stabil.
+Sortiert nach Meilenstein; vor dem Konkretisieren eines Meilensteins abarbeiten. Ablauf nach Abschluss: CLAUDE.md, „Pflege".
 
 ## M0: Entscheidungen und Prototypen
 
@@ -27,7 +19,7 @@ Stand: 16.10.2026
 
 - **R12** Weltdateien finden:
   - Minecraft-Ordner unter Linux: offizieller Launcher, Prism Launcher, Flatpak.
-  - Für die vorläufige Dual-Boot-Alternative die Windows-Partition (NTFS) lesen. Achtung: Schnellstart oder Ruhezustand von Windows sperrt die Partition.
+  - Für die vorläufige Dual-Boot-Alternative die Windows-Partition (NTFS) lesen (Hinweise in m5).
 - **R17** Welt- und Chunkformat im Stand 26.x:
   - Anvil-Regionsdateien, Chunk-NBT, Kompression (zlib, LZ4, ausgelagerte `.mcc`-Dateien)
   - DataVersion und Unterschiede zwischen den Versionen

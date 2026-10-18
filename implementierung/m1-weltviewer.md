@@ -4,10 +4,9 @@
 - Recherche fehlt: R12, R17–R22 (siehe [recherche-offen.md](recherche-offen.md)).
 - Entscheidungen fehlen: T6, T7, T9, T12, T13, T14, T15.
 
-**Größe laut Featureliste:** 3–6 Wochen, Risiko mittel.
+**Größe:** 3–6 Wochen, Risiko mittel.
 **Voraussetzung:** M0 abgeschlossen (T1–T3 entschieden).
-
-> **Für die Implementierungs-KI:** Diese Datei enthält alles, was für M1 nötig ist. Globale Leitplanken stehen in [CLAUDE.md](../CLAUDE.md), Quellen in [recherche-ergebnisse.md](recherche-ergebnisse.md). Die Bedienung (Tasten, Maus) steht im [Designplan](../designplan.md), Abschnitt 2 und 3.
+**Features:** [features.md](../features.md) §2 Navigation, §3 Welt (Umfang, Look), §6 eigene Daten. **Bedienung:** [bedienung.md](../bedienung.md) Tasten, Kamera und Waypoints.
 
 ## Ziel
 
@@ -18,7 +17,7 @@ Die echte Minecraft-Java-Welt des Nutzers **als normales Linux-Fenster** anzeige
 - Blockmodelle und Texturen aus der lokalen Installation laden
 - Waypoint-Bewegung, Kamera und Freisteuerung
 
-Licht, Himmel und Animationen kommen erst in M2. In M1 genügt eine einfache Schattierung pro Fläche.
+Licht, Himmel und Animationen kommen erst in M2. In M1 genügt eine einfache Schattierung pro Fläche. Mobs gehören nicht zu M1.
 
 ## Kern: darauf kommt es an
 
@@ -30,32 +29,22 @@ Licht, Himmel und Animationen kommen erst in M2. In M1 genügt eine einfache Sch
    - Flüssigkeiten
    - Block-Entities (Kisten, Schilder, Betten, Banner, Köpfe)
    - Biomfarben
+   Dazu kosten Sonderformen Zeit (Treppen, Zäune, Türen, Mehrteilblöcke über Blockstates).
 3. **Streaming:** Chunks werden asynchron in Worker-Threads gebaut, von innen nach außen. Das GPU-Upload passiert im Render-Thread ohne Ruckler. Die Welt endet an nicht generierten Chunks.
 4. **`welt` bleibt unabhängig vom Compositor**, damit M3 die Crate unverändert einbinden kann.
 
-## Entschieden
-
-- **Datenquellen:**
-  - Weltdateien nur lesen, nie schreiben.
-  - Kein Mojang-Code, keine Mojang-Dateien mitliefern. Texturen und Modelle kommen zur Laufzeit aus der lokalen Installation; Fallback-Texturen sind eigene.
-- **Welten:** Nur Singleplayer-Welten, eine Welt zur Zeit. Die ganze Welt ist begehbar, es werden keine neuen Chunks erzeugt.
-- **Navigation:**
-  - Waypoints bilden ein Wegenetz: jeder hat 4 Seiten, jede Seite ist mit höchstens einem anderen Waypoint verbunden. Ein neuer Waypoint ist automatisch mit dem aktuellen verbunden.
-  - Kamera: zentrierte Standardansicht, frei drehbar (Mittelmaustaste), Drehung um 90°, einstellbares FOV.
-  - Freisteuerung mit einer **festen Teilmenge** der Minecraft-Bewegung (welche, ist offen).
-- **Eigene Daten** (Waypoints, später Fensterlayout) werden getrennt von der Welt gespeichert, in einer Datei pro Welt.
-- **Mobs** sind standardmäßig aus und kein Teil von M1.
+Fallback-Texturen sind eigene (keine Mojang-Dateien).
 
 ## Zu entscheiden
 
 | Nr. | Frage | Hinweise |
 | --- | ----- | -------- |
-| T6 | Unterstützte Versionen (DataVersion-Bereich); welche Asset-Version bei mehreren Installationen | Der Nutzer spielt aktuell 26.x; Version noch erfragen (Featureliste, Frage 8). Ältere Chunks in alten Formaten: lesen, umrechnen oder als Platzhalter zeigen? |
+| T6 | Unterstützte Versionen (DataVersion-Bereich); welche Asset-Version bei mehreren Installationen | Der Nutzer spielt aktuell 26.x; genaue Version: F8. Ältere Chunks in alten Formaten: lesen, umrechnen oder als Platzhalter zeigen? |
 | T7 | Quelle für die fehlenden Blockdaten | Optionen siehe unten. Lizenz und Aktualität prüfen (R20) |
 | T9 | Datenstruktur für Chunks und Meshes, Format des Mesh-Caches | der Cache muss in M6 ungültig gemacht werden können (Weltdaten, Asset-Version, Resource Packs, Mesher-Version) |
-| T12 | Identität einer Welt für die Layout-Datei | Weltordner haben keine feste ID; Umbenennen bricht die Zuordnung |
-| T13 | Teilmenge der Bewegung | Featureliste, Frage 4: Kollision, Schwerkraft, Springen, Stufen, Schwimmen, Leitern? Laufen zwischen Waypoints mit Kollision oder geradlinig? |
-| T14 | Wo liegen die Welten (R12), und wird aus dem Original oder aus einer Kopie gelesen? | Das Original nie sperren, nie beschreiben. Der Sync-Teil kommt in M5 |
+| T12 | Identität einer Welt für die Layout-Datei | Weltordner haben keine feste ID; Umbenennen bricht die Zuordnung. Verankerung der Screens: m3 |
+| T13 | Teilmenge der Bewegung | F4 |
+| T14 | Wo liegen die Welten (R12), und wird aus dem Original oder aus einer Kopie gelesen? | Cache und Änderungserkennung: m5 |
 | T15 | Format der Einstellungen | – |
 
 **Optionen für T7:**
@@ -131,9 +120,8 @@ Nach bisherigem Wissensstand, mit R17–R20 für 26.x gegenprüfen.
 
 - **Nie abstürzen wegen Weltdaten:** unbekannte Blöcke, fehlende Modelle, kaputte Chunks und alte Formate ergeben Platzhalter und einen Zähler im Log.
 - **Falsche Verdeckung** erzeugt Löcher oder unsichtbare Wände. Die Verdeckung hängt an den Daten aus T7, nicht an Vermutungen.
-- **Die Originalwelt nie sperren oder beschreiben.** Läuft Minecraft gerade (`session.lock`), wird nur gelesen. Der saubere Weg über einen Cache kommt in M5.
+- **Die Originalwelt nie sperren.** Läuft Minecraft gerade (`session.lock`), wird nur gelesen. Der saubere Weg über einen Cache kommt in M5.
 - **Bildtaktung:** Auch der Viewer zeichnet nur bei Bedarf (T10). Ohne Kamerabewegung gibt es keine neuen Bilder, Animationen kommen erst in M2.
-- **Bedienung:** Im Viewer (normales Fenster in Plasma) fängt der Host die Super-Taste ab. Die Modifier-Taste muss konfigurierbar sein.
 - **Tests:** Mojang-Dateien dürfen nicht ins Repository. Unit-Tests bauen ihre NBT-Daten selbst; Integrationstests nutzen die lokale Installation, wenn vorhanden, sonst werden sie übersprungen.
 
 ## Umfang (Bausteine)
@@ -157,19 +145,9 @@ Nach bisherigem Wissensstand, mit R17–R20 für 26.x gegenprüfen.
 
 ## Offene Fragen an den Nutzer
 
-- **Featureliste:**
-  - Frage 4: Physik-Teilmenge.
-  - Frage 8: Version, Resource Packs, Nether und End.
-- **Designplan:**
-  - Frage 2: Doppelklicks.
-  - Frage 3: Waypoints.
-  - Frage 4: Randpfeile.
-  - Frage 5: Freisteuerung.
-  - Frage 11: Ausrichtung der zentrierten Kamera.
+F4, F8; D2, D3, D4, D5, D11.
 
 ## Referenzen
-
-Technik anschauen; Code nur bei MIT- oder Apache-Lizenz übernehmen.
 
 - **Minecraft-Wiki:** Seiten zu Region file format, Chunk format, Model und Blockstates
 - **Crates:** [fastnbt](https://github.com/owengage/fastnbt), [simdnbt und azalea](https://github.com/azalea-rs/azalea)

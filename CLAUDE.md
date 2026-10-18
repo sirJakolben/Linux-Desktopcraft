@@ -1,35 +1,41 @@
 # Minecraft Shell
 
-Eine Desktop-Shell, die wie eine begehbare Minecraft-Welt aussieht. Sie liest echte Minecraft-Weltdateien mit einem eigenen Renderer und zeigt Programme als Screens an den Wänden eines Hauses. **Status: Brainstorming abgeschlossen, noch nichts implementiert.**
+Desktop-Shell als begehbare Minecraft-Welt: Ein eigener Renderer liest echte Weltdateien, Programme hängen als Screens an den Wänden eines Hauses. **Status: Planung, noch kein Code.**
 
-## Dokumente
+## Dateien
 
-- [featurelist.md](featurelist.md): Was die Features sind und tun (Teil 1), grober Entwicklungsplan mit Meilensteinen (Teil 2), Entscheidungen und offene Fragen (Teil 3). **Zuerst lesen**, inklusive der Regeln oben in der Datei.
-- [designplan.md](designplan.md): Wie der Nutzer mit den Features interagiert (Tastenbelegung, Mausaktionen, Aufbau der Oberfläche) und offene Bedienungsfragen.
-- [implementierungsplan.md](implementierungsplan.md): Übersicht der technischen Entscheidungen, die alle Meilensteine betreffen, die Architektur und ein Verzeichnis der Implementierungsdateien.
-- [implementierung/](implementierung/): **je eine Datei pro Meilenstein** (`m0-…` bis `m9-…`). Sie ist die alleinige Arbeitsgrundlage der Implementierungs-Session für diesen Meilenstein. Dazu kommen [recherche-offen.md](implementierung/recherche-offen.md) (ausstehende Recherchen) und [recherche-ergebnisse.md](implementierung/recherche-ergebnisse.md) (Funde mit Quellen).
-- [linux-umzug.md](linux-umzug.md): Schritt-für-Schritt-Anleitung für den Umstieg des Nutzers auf Linux (Dual Boot, später nur Linux), mit Abhaken.
+| Datei | Inhalt | Lesen bei |
+| ----- | ------ | --------- |
+| [features.md](features.md) | was die Features tun, offene Fragen F… | Feature-Fragen; bei Meilensteinen die dort genannten Abschnitte |
+| [bedienung.md](bedienung.md) | Tasten, Abläufe, offene Fragen D… | Bedienungsfragen; M1, M3, M4 |
+| [implementierungsplan.md](implementierungsplan.md) | übergreifende technische Entscheidungen, Verzeichnis T…, Architektur, Reihenfolge | jedem Meilenstein, technischen Fragen |
+| `implementierung/m0-…` bis `m9-…` | je ein Meilenstein: Planungsstand, Kern, T-Details, Technik, Abnahme | Arbeit an diesem Meilenstein |
+| [recherche-offen.md](implementierung/recherche-offen.md) | ausstehende Recherchen R… | Recherchen |
+| [recherche-ergebnisse.md](implementierung/recherche-ergebnisse.md) | Funde mit Quellen (Archiv) | nur wenn Belege gebraucht werden |
+| [linux-umzug.md](linux-umzug.md), `prompts/` | Linux-Umzug des Nutzers | nur dafür |
 
-## Regeln für die Pflege
+IDs bleiben stabil: F = features.md, D = bedienung.md, T = Verzeichnis im Implementierungsplan, R = Recherchen, P = Prototyp-Tests (m0).
 
-- **Trennung beachten:** Die Featureliste beschreibt nur *was* ein Feature ist, nie wie man es bedient. Tasten, Klicks und Positionen der Oberfläche gehören in den Designplan. Kommt ein Feature hinzu, steht es in der Featureliste, seine Bedienung im Designplan.
-- Entscheidungen des Nutzers zu Features in Teil 3 der Featureliste unter „Entschieden" eintragen, geklärte Fragen aus „Offen" entfernen. Technische Entscheidungen stehen nur im Implementierungsplan. Bedienungsfragen stehen im Designplan (Abschnitt 6).
-- Die Meilensteine in Teil 2 der Featureliste sind nur grob. Vor dem Implementieren den Meilenstein in seiner Datei unter `implementierung/` konkretisieren (recherchieren, Entscheidungen klären, Prototypen) und erst dann die Klammer „(grob)" in der Featureliste entfernen.
-- **Meilenstein-Dateien** sind für Implementierungs-KIs geschrieben: technisch und knapp. Jede ist für sich allein nutzbar und nennt Ziel, Kern, getroffene Entscheidungen, „Unbedingt beachten", Abnahme und offene Fragen. Hier ist Wiederholung aus anderen Dateien erlaubt. Ändert sich eine übergreifende Entscheidung, alle betroffenen Meilenstein-Dateien mit anpassen.
-- **Recherchen:** Eine fertige Recherche kommt mit Quellen in `recherche-ergebnisse.md`. Was für die Umsetzung wichtig ist, wird in die Meilenstein-Datei übernommen, und der Punkt wird aus `recherche-offen.md` gelöscht.
-- Nichts erfinden: Was der Nutzer nicht festgelegt hat, kommt als offene Frage in die Dateien, nicht als Entscheidung.
-- Dokumente knapp halten. Doppelte Informationen und unnötige Unterüberschriften vermeiden.
+Ausführliche Fassung für den Nutzer: `~/Obsidian/jakobs-obsidian/01_Minecraft Shell/`, eine Datei pro Feature-Gruppe mit Fließtext (derzeit noch `featurelist.md` und `designplan.md` als Ganzes). Nicht für die Arbeit lesen.
+
+## Pflege
+
+- Jede Information steht an genau einem Ort; anderswo per ID oder Abschnitt verweisen.
+- Feature neu oder geändert: *was* → features.md, *wie bedient* → bedienung.md, ausführlich → Obsidian-Datei der Feature-Gruppe. Entscheidungen direkt beim Feature eintragen, die geklärte Frage löschen.
+- Technische Entscheidungen: Details in der Meilenstein-Datei, die sie trifft, Status im T-Verzeichnis; übergreifende im Implementierungsplan.
+- Als entschieden gilt nur, was der Nutzer bestätigt hat; sonst Empfehlung oder offene Frage. Nichts erfinden.
+- Meilenstein vor dem Implementieren konkretisieren: offene Punkte recherchieren, Entscheidungen klären, Teilaufgaben mit Abnahme, Risiken per Prototyp testen. Erst dann im Kopf der Datei Planungsstand „bereit".
+- Recherche fertig: Fund mit Quellen → recherche-ergebnisse.md, Umsetzungsrelevantes → Meilenstein-Datei, Punkt aus recherche-offen.md löschen.
 
 ## Konventionen
 
-- Sprache der Dokumente und der Zusammenarbeit: **Deutsch** (mit Umlauten).
-- Der Nutzer diktiert oft frei per Sprache. Aussagen können abbrechen oder sich widersprechen: Widersprüche und Lücken ansprechen, nicht stillschweigend auflösen.
+- Deutsch mit Umlauten.
+- Der Nutzer diktiert oft per Sprache: Widersprüche und Lücken ansprechen, nicht stillschweigend auflösen.
 
-## Leitplanken des Projekts
+## Leitplanken
 
-- Eigener Renderer, der Minecrafts offene Formate liest (`.mca`, Blockstates und Modelle als JSON, PNG-Texturen). Kein Mojang-Code, keine Mojang-Dateien mitliefern. Texturen kommen aus der lokalen Installation des Nutzers.
+- Eigener Renderer für Minecrafts offene Formate (`.mca`, Blockstates und Modelle als JSON, PNG-Texturen); Status: F12. Kein Mojang-Code, keine Mojang-Dateien mitliefern; Texturen aus der lokalen Installation.
 - Weltdateien nur lesen, nie schreiben.
-- Plattform: **eigenständiges Linux**, auch Minecraft wird dort gespielt. Dual Boot mit Windows ist nur eine Option (vorläufige Alternative: Weltprüfung beim Linux-Start). Sprache und Grafik-API sind noch nicht entschieden.
-- Ein eigener Datei-Explorer (Custom Explorer) ist Teil des Projekts: Hotbar, Inventar und Kisten sind echte Ordner.
-- **Claude Code programmiert, der Nutzer liest keinen Code** (kann kein Rust). Ergebnisse so erklären und abnehmen, dass sie ohne Codelesen prüfbar sind: sichtbares Verhalten, Screenshots, Messwerte, automatische Tests.
-- **Freie Nutzung ohne Bedingungen: Lizenz 0BSD.** Keinen Code aus GPL-Projekten (Waylandcraft, niri, Stardust) übernehmen, nur deren Techniken verstehen und selbst neu umsetzen.
+- Plattform: eigenständiges Linux, auch Minecraft läuft dort. Dual Boot mit Windows nur als Übergang.
+- **Claude Code programmiert, der Nutzer liest keinen Code** (kann kein Rust). Abnahme ohne Codelesen: sichtbares Verhalten, Screenshots, Messwerte, automatische Tests.
+- **Lizenz 0BSD.** Fremden Code nur bei MIT- oder Apache-Lizenz übernehmen; von GPL-Projekten (Waylandcraft, niri, Stardust) und anderem Copyleft nur die Technik.

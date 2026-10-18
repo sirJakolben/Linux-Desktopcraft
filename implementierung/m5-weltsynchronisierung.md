@@ -3,17 +3,15 @@
 **Planungsstand:** grob. Der Ablauf ist klar, aber noch nicht bereit.
 - Recherche fehlt: R12, R31.
 - Entscheidungen fehlen: T14, T16.
-- Fragen an den Nutzer fehlen: Featureliste, Frage 6.
+- Fragen an den Nutzer fehlen: F6, F1 (Launcher), D7.
 
-**Größe laut Featureliste:** 2–4 Wochen, Risiko niedrig bis mittel.
+**Größe:** 2–4 Wochen, Risiko niedrig bis mittel.
 **Voraussetzung:** M1. Die Erkennung von Minecraft-Fenster und -Prozess braucht M3.
-
-> **Für die Implementierungs-KI:** Diese Datei enthält alles, was für M5 nötig ist. Globale Leitplanken stehen in [CLAUDE.md](../CLAUDE.md).
+**Features:** [features.md](../features.md) §6 (Weltupdate, Dual-Boot-Übergang, Banner, eigene Daten), „Welt in Minecraft starten" in §5.
 
 ## Ziel
 
-- **Weltupdate:** Wird Minecraft beendet, kopiert die Shell die geänderten Teile der Welt in ihren eigenen Cache und baut nur die geänderten Chunks neu. Ein Banner zeigt den Fortschritt und am Ende einen Haken.
-- **Welt starten:** Aus der Weltenauswahl startet ein Knopf die gewählte Welt direkt im echten Minecraft.
+Weltupdate nach dem Beenden von Minecraft und Start einer Welt im echten Minecraft aus der Weltenauswahl.
 
 ## Kern: darauf kommt es an
 
@@ -21,23 +19,13 @@
 2. **Genauer Abgleich auf Chunk-Ebene:** Die Zeitstempel im Kopf jeder Regionsdatei zeigen, welche Chunks sich geändert haben. Nur diese werden neu gebaut.
 3. **Start in eine Welt** über einen Launcher, ohne dass die Shell selbst Microsoft-Anmeldedaten verwaltet (T16).
 
-## Entschieden
-
-- **Auslöser** ist das Beenden von Minecraft. Danach wird inkrementell kopiert und neu gebaut, mit Banner und Haken.
-- **Linux als Hauptweg:** Minecraft wird unter Linux in der Shell gespielt; Prozess und Fenster sind dort sicher erkennbar.
-- **Dual Boot, vorläufige Alternative:** Beim Linux-Start werden die Welten auf der Windows-Partition geprüft und geänderte aktualisiert.
-- **Umfang:** nur Singleplayer-Welten, keine Realms, keine Server.
-- **Layout getrennt:** Fensterlayout, Item-Positionen und Waypoints stehen getrennt von der Welt.
-- **Launcher-Knopf** neben jeder Welt in der Weltenauswahl.
-
 ## Zu entscheiden
 
 | Nr. | Frage | Hinweise |
 | --- | ----- | -------- |
 | T14 | Aufbau des Weltcaches und Erkennung von Änderungen | Region-Zeitstempel, Größe und mtime der Dateien, Inhalts-Hash; wohin der Cache kommt; wie viel Speicher er braucht |
 | T16 | Wie Minecraft gestartet wird | einen vorhandenen Launcher steuern (Prism Launcher) oder einen eigenen Launcher bauen (Microsoft-Anmeldung, Spieldateien, Java). Empfehlung nach R31 |
-| F6 | Tageszeit nach dem Update | aus dem Spiel übernehmen oder die angehaltene Zeit der Shell behalten (Featureliste, Frage 6) |
-| – | Banner: nur Fortschritt oder auch eine Zusammenfassung? | Designplan, Frage 7 |
+| F6, F1, D7 | Tageszeit nach dem Update, Launcher unter Linux, Inhalt des Banners | features.md, bedienung.md |
 
 ## Technische Grundlagen
 
@@ -59,7 +47,7 @@ Mit R12 und R31 prüfen.
 - **Kein Schreibzugriff** auf Weltordner, auch nicht über Sperren oder Zeitstempel.
 - **Nie während eines laufenden Spiels kopieren.** Es entstünde ein halber Stand.
 - **Spielerposition und Tageszeit** aus `level.dat` erst nach dem Update übernehmen.
-- **Fensterlayout** muss gegen geänderte Wände geprüft werden (Featureliste, Frage 10; M3, T12).
+- **Fensterlayout** muss gegen geänderte Wände geprüft werden (F10; T12 in m3).
 - **Fehlertoleranz:** Bricht ein Update ab, bleibt der alte Cache gültig.
 
 ## Abnahme (ohne Codelesen prüfbar)
@@ -68,8 +56,3 @@ Mit R12 und R31 prüfen.
 - **Messung:** Bei einer Änderung in einer einzigen Region wird nur diese neu gebaut (Zeit und Zahl der Chunks im Log).
 - **Original unverändert:** Prüfsummen der Weltordner vor und nach dem Lauf sind identisch, abgesehen von dem, was Minecraft selbst geschrieben hat.
 
-## Offene Fragen an den Nutzer
-
-- Featureliste, Frage 6.
-- Designplan, Frage 7.
-- Mit welchem Launcher spielt der Nutzer unter Linux? (Featureliste, Frage 1)

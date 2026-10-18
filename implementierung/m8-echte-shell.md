@@ -2,28 +2,20 @@
 
 **Planungsstand:** grob, nicht bereit.
 - Recherche fehlt: R30.
-- Fragen an den Nutzer fehlen: Featureliste, Frage 11 (Shell-Grundfunktionen).
+- Fragen an den Nutzer fehlen: F11 (Shell-Grundfunktionen).
 - Hängt von allen vorigen Meilensteinen ab.
 
-**Größe laut Featureliste:** 3–8 Wochen, Risiko hoch.
+**Größe:** 3–8 Wochen, Risiko hoch.
 **Voraussetzung:** M3 und M4.
-
-> **Für die Implementierungs-KI:** Diese Datei enthält alles, was für M8 nötig ist. Globale Leitplanken stehen in [CLAUDE.md](../CLAUDE.md), Quellen in [recherche-ergebnisse.md](recherche-ergebnisse.md), Abschnitt R5/R6/R14.
+**Features:** [features.md](../features.md) §1 (PC startet in der Welt), §8 (System). **Belege:** recherche-ergebnisse.md R5, R6, R14.
 
 ## Ziel
 
-Die Shell wird zur eigenen Login-Sitzung: Der PC startet direkt in die Welt.
-
-Dazu gehören:
-- Benachrichtigungen
-- Audio
-- mehrere Monitore
-- Energiesparen
-- Absturzschutz mit Notfallmodus
+Die Shell wird zur eigenen Login-Sitzung mit den Systemfunktionen aus §8.
 
 ## Kern: darauf kommt es an
 
-1. **Notfallmodus, bevor die Shell Standard wird.** Das ist entschieden. Zunächst über die Sitzung: Plasma bleibt als zweite Sitzung im Display-Manager. Optional wechselt ein Wrapper bei einem Exit-Code ungleich 0 automatisch dorthin (Entwurfsidee, ungetestet).
+1. **Notfallmodus, bevor die Shell Standard wird.** Das ist entschieden. Zunächst über die Sitzung: Plasma (oder GNOME, siehe T4 in m0) bleibt als zweite Sitzung im Display-Manager. Optional wechselt ein Wrapper bei einem Exit-Code ungleich 0 automatisch dorthin (Entwurfsidee, ungetestet).
 2. **Absturzverhalten:** Stürzt der Compositor ab, sterben alle Programme mit. Nur Qt-6-Programme können sich wieder verbinden. Deshalb darf ein Fehler im Weltrenderer den Compositor nicht beenden (T3), und offene Arbeit ist in Gefahr.
 3. **Echte Hardware statt nested:**
    - DRM/KMS, libinput, libseat
@@ -31,20 +23,9 @@ Dazu gehören:
    - Direct Scanout
    - mehrere Monitore
 
-## Entschieden
-
-- Vollständige Desktop-Shell; der PC startet direkt in der Welt.
-- Der Notfallmodus muss existieren, bevor die Shell Standard wird.
-
 ## Zu entscheiden
 
-- **Welche Shell-Grundfunktionen** in welcher Form (Featureliste, Frage 11):
-  - Sperrbildschirm, Abmelden und Herunterfahren
-  - Tastaturlayout
-  - Lautstärke und Helligkeit
-  - Netzwerk und Bluetooth
-  - System-Tray
-  - Bildschirmfreigabe und Screenshots
+- **Welche Shell-Grundfunktionen** in welcher Form: F11.
 - **Mehrere Monitore:** Was zeigt jeder Monitor?
 - **Prozessaufteilung:** Wird die Welt in einen eigenen Prozess ausgelagert (T3)? Erst entscheiden, wenn sich Abstürze in der Praxis zeigen.
 
@@ -60,7 +41,7 @@ Dazu gehören:
   - Bildschirmfreigabe braucht Capture-Protokolle im Compositor (`ext-image-copy-capture`, für `xdg-desktop-portal-wlr`)
 - **Benachrichtigungen:** D-Bus-Dienst `org.freedesktop.Notifications` selbst anbieten.
 - **Wiederverbindung nach Absturz:** `QT_WAYLAND_RECONNECT=1`, `wl-restart` als Muster für einen Socket, der einen Neustart überlebt.
-- **NVIDIA:** Explicit Sync, Production-Zweig 595, Cursor-Planes mit linearem Modifier. Bekannt: Aufwachen aus dem Ruhezustand hängt mit Kernel 7.x auf Blackwell (Umgehung `s2idle`).
+- **NVIDIA** (Treiber und Explicit Sync: m0): Cursor-Planes mit linearem Modifier. Bekannt: Aufwachen aus dem Ruhezustand hängt mit Kernel 7.x auf Blackwell (Umgehung `s2idle`).
 
 ## Unbedingt beachten
 

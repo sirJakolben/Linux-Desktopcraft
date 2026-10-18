@@ -2,11 +2,7 @@
 
 Stand: 16.10.2026
 
-> **Für KI-Sessions:** Funde abgeschlossener Recherchen mit Quellen, als Nachschlagewerk. Was davon für die Umsetzung wichtig ist, steht zusätzlich in der jeweiligen Meilenstein-Datei.
->
-> - „(unsicher)" heißt: nicht belegt, im Prototyp oder per weiterer Recherche prüfen.
-> - Die Recherche der Session 02 lief über sechs parallele Agenten.
-> - Die Kernaussagen zu wgpu (R7/R13) und Waylandcraft (R3) wurden an der Quelle nachgeprüft.
+Archiv mit Quellen; für die Umsetzung gelten die Meilenstein-Dateien. „(unsicher)" = nicht belegt, im Prototyp oder per Recherche prüfen. Die Kernaussagen zu wgpu (R7/R13) und Waylandcraft (R3) sind an der Quelle nachgeprüft.
 
 ## R1–R4: Vorbilder
 
