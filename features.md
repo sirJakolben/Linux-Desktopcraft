@@ -58,7 +58,7 @@ Inhalt: 1 Vision · 2 Navigation · 3 Welt und Rendering · 4 Fenster in der Wel
 Hotbar = Taskleiste, Inventar = Desktop, Kiste = Ordner, Nether-Portal = Weltenwechsel.
 
 - **Echte Ordner:** Hotbar, Inventar und Kisten sind die Ordner selbst im Dateisystem (keine Kopien oder Verknüpfungslisten), auch im Explorer sichtbar. Ein Item bewegen verschiebt Datei oder Ordner **physisch**.
-- **Hotbar:** Look der Minecraft-Hotbar, eigener Ordner, immer sichtbar. Zeigt offene und minimierte Programme; 9 Slots, mehr bei Bedarf (D1). Anwendungen daraus lassen sich als Screen in die Welt setzen.
+- **Hotbar:** Look der Minecraft-Hotbar, eigener Ordner, immer sichtbar. Zeigt offene und minimierte Programme; 9 Slots, mehr bei Bedarf. Anwendungen daraus lassen sich als Screen in die Welt setzen.
 - **Offene Anwendungen:** Items mit Enchantment-Glow; Klick öffnet das Fenster. Sie liegen in einer eigenen Sektion im Hotbar- und Inventar-Ordner und sehen aus wie Dateien, sind aber keine: Die Sektion gibt es nur im eigenen Explorer. Nur in Hotbar und Inventar (dort frei verschiebbar), nie in Kisten. Mit Schließen-Knopf und Live-Vorschau. Jede Instanz ist ein eigenes Item (zwei Word-Fenster = zwei Items).
 - **Übersicht offener Anwendungen:** eigenes Symbol neben Kisten- und Portal-Symbol; zeigt alle offenen Anwendungen in einem Fenster. Von dort öffnen oder in eine der drei Ansichten ziehen.
 - **Suche** auf dem PC.
@@ -102,8 +102,7 @@ Hotbar = Taskleiste, Inventar = Desktop, Kiste = Ordner, Nether-Portal = Weltenw
 
 | Nr. | Frage |
 | --- | ----- |
-| F1 | Linux-Details: Kommen Windows-Programme in die Welt (nur Linux-Apps oder Wine/Proton)? Welcher Launcher unter Linux (offiziell, Prism …)? Distribution: Fedora ist installiert (m0 T4), damit entschieden? |
-| F2 | Sprache und Grafik-API: → T1 |
+| F1 | Linux-Details: Kommen Windows-Programme in die Welt (nur Linux-Apps oder Wine/Proton)? Welcher Launcher unter Linux (offiziell, Prism …)? |
 | F3 | Recht bei Veröffentlichung: EULA, Nutzungsrichtlinien, Lizenzen übersetzter Shader. „Minecraft" darf laut Richtlinien nicht Hauptname sein: Wie heißt das Projekt? (R26) |
 | F4 | Freisteuerung: welche Teilmenge der Bewegung (Kollision, Schwerkraft, Springen, Schwimmen, Leitern …)? Zwischen Waypoints mit Kollision oder geradlinig? |
 | F5 | Pause: Heißt „in einer Anwendung" nur Vollbild, oder auch ein fokussierter Screen an der Wand? |

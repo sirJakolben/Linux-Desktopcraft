@@ -3,7 +3,7 @@
 **Planungsstand:** grob, nicht bereit.
 - Recherche fehlt: R27.
 - Detaildesigns fehlen: Hotbar, Inventar, Explorer, Speichern der Item-Positionen.
-- Fragen an den Nutzer fehlen: D1, D1a, F9.
+- Fragen an den Nutzer fehlen: D1a, F9.
 
 **Größe:** 3–6 Wochen, dazu der eigene Datei-Explorer (noch nicht geschätzt). Risiko mittel.
 **Voraussetzung:** M3.
@@ -26,7 +26,6 @@ Die Shell-Elemente aus §5 umsetzen: Hotbar, Symbolleiste, Inventar, Kisten, eig
 
 | Frage | Quelle |
 | ----- | ------ |
-| Hotbar-Slots, Kistensymbol | D1 |
 | Speicherort der Item-Positionen, Änderungen außerhalb des Explorers | D1a; R27 |
 | Echte Kisten in der Welt mit Ordnern verbunden? | F9 |
 | Drei Ansichten | D12 |
