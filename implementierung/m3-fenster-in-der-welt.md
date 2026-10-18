@@ -5,7 +5,7 @@
 - Entscheidungen fehlen: T11 (m0), T12.
 
 **Größe:** 6–12+ Wochen, Risiko sehr hoch. Das ist der größte Zeitfresser des Projekts.
-**Voraussetzung:** M0 und M2. Der Compositor bindet die Crate `welt` ein.
+**Voraussetzung:** M0 und M2. Der Compositor bindet die Crate `world` ein.
 **Features:** [features.md](../features.md) §4 (Fenster in der Welt), Pause in §3. **Bedienung:** [bedienung.md](../bedienung.md) Screens, Drei Ansichten.
 **M0 lesen:** [m0](m0-entscheidungen-und-prototypen.md) „Unbedingt beachten" (Puffer, Sync, Raycast, Pop-ups, Fenstergröße, Drosselung) ist die Grundlage dieser Datei; die M0-„Ergebnisse" gehen allem hier vor.
 

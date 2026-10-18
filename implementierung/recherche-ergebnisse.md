@@ -163,7 +163,7 @@ Archiv mit Quellen; für die Umsetzung gelten die Meilenstein-Dateien. „(unsic
 - **Explicit Sync:**
   - Auf NVIDIA Pflicht, seit Treiber 555 ([Phoronix](https://www.phoronix.com/news/Nvidia-555.58-Linux-Driver)).
   - Smithay `drm_syncobj`: Der `DrmSyncPointBlocker` hält den Commit zurück, bis der Acquire-Fence signalisiert ist. Das Protokoll nur anbieten, wenn `supports_syncobj_eventfd` true liefert ([docs](https://docs.rs/smithay/latest/smithay/wayland/drm_syncobj/index.html)).
-  - Ob wgpu fremde Semaphoren importieren kann, ist ungeklärt (unsicher).
+  - wgpu kann keine fremden Semaphoren importieren; nicht nötig (R33).
 - **Mipmaps:** Client-Puffer haben nur eine Mip-Stufe. Eine eigene Kopie mit Mip-Kette kostet etwa 33 % mehr Speicher und bei 1080p vermutlich unter 1 ms (unsicher).
 
 ### Eingaben und Pop-ups
@@ -182,7 +182,7 @@ Archiv mit Quellen; für die Umsetzung gelten die Meilenstein-Dateien. „(unsic
 - **Subsurfaces:** Am einfachsten zeichnet man den ganzen Surface-Baum eines Fensters in eine eigene Offscreen-Textur.
 - **Dialoge:**
   - `xdg_toplevel.set_parent` bildet die Hierarchie.
-  - `xdg-dialog-v1` ist nur ein Hinweis und noch im Status „testing"; ob Smithay es hat, ist unsicher.
+  - `xdg-dialog-v1` ist nur ein Hinweis und noch im Status „testing"; Smithay hat es (R33).
 - **Zwischenablage und Drag & Drop:** Smithay-Modul `selection`; Drag & Drop nutzt denselben Raycast.
 - **IME:** `text-input-v3` und `input-method-v2`, beide experimentell.
 - **HiDPI:** Mit `fractional-scale-v1` und `wp_viewporter` lässt sich die Texturauflösung unabhängig von der logischen Größe steuern.
@@ -308,6 +308,47 @@ Abfrage vom 16.10.2026:
 - **Entwicklungsumgebung:**
   - Der Weltrenderer liefe mit wgpu auch unter Windows. Das ist kein Ziel mehr, T5 ist entschieden: alles unter Linux.
   - WSL2 taugt nicht für den Compositor: kein DRM, Vulkan nur über dzn.
+
+## R32, R33: Waylandcraft, Sync und Import im Detail (18.10.2026)
+
+Am Quellcode geprüft (Git-Stände vom 15.–17.10.2026).
+
+### Waylandcraft (R32)
+
+- Rust-Teil (~5.600 Zeilen) als JNI-Bibliothek, Smithay auf Commit `89e58f7` mit `default-features = false`, Features `wayland_frontend` und `backend_drm`.
+- **Kein `drm_syncobj`**; trotzdem auf NVIDIA lauffähig, nur mit `__GL_THREADED_OPTIMIZATIONS=0` für Minecraft (das Programm entfernt die Variable für gestartete Apps).
+- dmabuf-Import per `eglCreateImage` (`EGL_LINUX_DMA_BUF_EXT`) und `glEGLImageTargetTexture2DOES`; dmabuf-Feedback mit den Formaten aus Minecrafts GL-Kontext.
+- `WorldPlane`: Ursprung plus drei Achsen; Schnitt Strahl–Ebene, dann inverse 3×3-Matrix → lokale Koordinate. Parallelstrahl (Nenner 0) und Treffer hinter der Kamera → kein Treffer.
+- Pixel pro Block: Standard **500**.
+- Pop-ups: eigene Anzeige pro Pop-up; Positioner-Geometrie unverändert übernommen, Grab-Anfragen ignoriert.
+- Tastatur: `G` = Fang, `Alt+Q` = harter Fang (auch Escape und relative Maus), erneut `Alt+Q` gibt frei.
+- [Repo](https://github.com/EVV1E/waylandcraft)
+
+### Explicit Sync in Smithay (R33)
+
+- `drm_syncobj`: Acquire wird per eventfd abgewartet (`DrmSyncPointBlocker`), der Commit gilt erst danach. Release wird signalisiert, wenn alle Referenzen auf `backend::renderer::utils::Buffer` freigegeben sind, oder wenn ein neuer Commit den alten Punkt ersetzt.
+- Braucht ein `DrmDeviceFd` (Feature `backend_drm`).
+- [Quelle `src/wayland/drm_syncobj/mod.rs`](https://github.com/Smithay/smithay/blob/master/src/wayland/drm_syncobj/mod.rs)
+
+### dmabuf-Import in wgpu (R33)
+
+- Aktuell: wgpu 30.0.1 (21.08.2026). `texture_from_dmabuf_fd` nutzt `VkImageDrmFormatModifierExplicitCreateInfoEXT` (expliziter Pfad, eine Ebene, Offset und Stride); Vulkan übernimmt den fd.
+- Im Trunk nach 30.0.1: `hal::TextureBarrier::queue_family_ownership_transfer` mit `QueueFamily::External`/`Foreign` ([PR #9668](https://github.com/gfx-rs/wgpu/pull/9668), 14.08.2026) und `Texture::mark_externally_initialized` (PR #10075).
+- Offener [PR #10522](https://github.com/gfx-rs/wgpu/pull/10522): GLES-Import, Formatabfrage, Acquire/Release-Helfer; Autor baut einen Smithay-Compositor mit wgpu. Maintainer wollen die Formatabfrage eher nicht in wgpu.
+- Kein Import fremder Semaphoren in wgpu-hal.
+- NVIDIA-Fehler im expliziten Pfad: gemeldet für **NV12** (mehrere Ebenen) auf 595.71.05, Listen-Pfad und EGL gehen; Nutzerbericht, keine Antwort von NVIDIA ([Forum](https://forums.developer.nvidia.com/t/nvidia-vulkan-vkimagedrmformatmodifierexplicitcreateinfoext-rejects-nv12-layouts-that-the-list-based-path-accepts/371199)).
+- Smithays winit-Backend verlangt `R: From<GlesRenderer>`; für wgpu ungeeignet.
+
+### Sonstiges (R33)
+
+- `xwayland-satellite` (MPL-2.0, 0.8.2 in Fedora 44) bildet Override-Redirect-Fenster per Heuristik als `xdg_popup` ab ([Repo](https://github.com/Supreeeme/xwayland-satellite)).
+- Smithay hat `xdg-dialog-v1` (`wayland::shell::xdg::dialog`).
+- Wie wgpu-Bilder auf Smithays DRM-Ausgabe kommen: nicht recherchiert, bleibt Prototyp-Test P15 (m0).
+
+### NVIDIA 610+ und Fedora 44
+
+- 610.43.02 bringt die DRM-Color-Pipeline pro Plane; Compositors, die nicht umgehbare Colorops falsch behandeln, zeigen beim Einschalten von HDR einen schwarzen Bildschirm. Abhilfe: neuer Parameter `color_pipeline` von `nvidia-drm` ([Release-Notes](https://download.nvidia.com/XFree86/Linux-x86_64/610.43.02/README/wayland-issues.html), [GamingOnLinux](https://www.gamingonlinux.com/2026/05/nvidia-driver-610-43-02-arrives-for-linux-with-vulkan-upgrades-drm-colour-pipeline-api-support/page=1/)).
+- RPM Fusion für Fedora 44 hat keinen eigenen 595-Zweig zum Festhalten, nur Legacy 580xx ([Fedora Discussion](https://discussion.fedoraproject.org/t/pascal-nvidia-gpus-no-longer-supported-as-of-595-xx-version-from-rpmfusion/190474)).
 
 ## R26: Recht
 

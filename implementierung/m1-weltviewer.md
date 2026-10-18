@@ -31,7 +31,7 @@ Licht, Himmel und Animationen kommen erst in M2. In M1 genügt eine einfache Sch
    - Biomfarben
    Dazu kosten Sonderformen Zeit (Treppen, Zäune, Türen, Mehrteilblöcke über Blockstates).
 3. **Streaming:** Chunks werden asynchron in Worker-Threads gebaut, von innen nach außen. Das GPU-Upload passiert im Render-Thread ohne Ruckler. Die Welt endet an nicht generierten Chunks.
-4. **`welt` bleibt unabhängig vom Compositor**, damit M3 die Crate unverändert einbinden kann.
+4. **`world` bleibt unabhängig vom Compositor**, damit M3 die Crate unverändert einbinden kann.
 
 Fallback-Texturen sind eigene (keine Mojang-Dateien).
 

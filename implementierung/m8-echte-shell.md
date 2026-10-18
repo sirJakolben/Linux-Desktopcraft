@@ -15,7 +15,7 @@ Die Shell wird zur eigenen Login-Sitzung mit den Systemfunktionen aus §8.
 
 ## Kern: darauf kommt es an
 
-1. **Notfallmodus, bevor die Shell Standard wird.** Das ist entschieden. Zunächst über die Sitzung: Plasma (oder GNOME, siehe T4 in m0) bleibt als zweite Sitzung im Display-Manager. Optional wechselt ein Wrapper bei einem Exit-Code ungleich 0 automatisch dorthin (Entwurfsidee, ungetestet).
+1. **Notfallmodus, bevor die Shell Standard wird.** Das ist entschieden. Zunächst über die Sitzung: die GNOME-Sitzung (T4 in m0) bleibt als zweite Sitzung im Display-Manager. Optional wechselt ein Wrapper bei einem Exit-Code ungleich 0 automatisch dorthin (Entwurfsidee, ungetestet).
 2. **Absturzverhalten:** Stürzt der Compositor ab, sterben alle Programme mit. Nur Qt-6-Programme können sich wieder verbinden. Deshalb darf ein Fehler im Weltrenderer den Compositor nicht beenden (T3), und offene Arbeit ist in Gefahr.
 3. **Echte Hardware statt nested:**
    - DRM/KMS, libinput, libseat

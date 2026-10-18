@@ -20,10 +20,10 @@ Details, Empfehlung und Hinweise stehen in der genannten Meilenstein-Datei.
 
 | Nr. | Thema | Status | Datei |
 | --- | ----- | ------ | ----- |
-| T1 | Sprache und Grafik-API | offen, Empfehlung Rust + wgpu | [m0](implementierung/m0-entscheidungen-und-prototypen.md) |
-| T2 | Compositor-Bibliothek | offen, Empfehlung Smithay | m0 |
-| T3 | Prozessaufteilung | offen, Empfehlung ein Prozess | m0 |
-| T4 | Linux-Distribution und Desktop | offen, Widerspruch zum Ist-Stand | m0 |
+| T1 | Sprache und Grafik-API | entschieden: Rust + wgpu | [m0](implementierung/m0-entscheidungen-und-prototypen.md) |
+| T2 | Compositor-Bibliothek | entschieden: Smithay | m0 |
+| T3 | Prozessaufteilung | entschieden: ein Prozess | m0 |
+| T4 | Linux-Distribution und Desktop | entschieden: Fedora mit GNOME | m0 |
 | T5 | Entwicklungsweg | entschieden | hier |
 | T6 | unterstützte Minecraft-Versionen, Asset-Version | offen | [m1](implementierung/m1-weltviewer.md) |
 | T7 | Quelle für Blockdaten außerhalb der Assets | offen | m1 |
@@ -38,17 +38,17 @@ Details, Empfehlung und Hinweise stehen in der genannten Meilenstein-Datei.
 | T16 | Minecraft starten: Launcher steuern oder eigener | offen | m5 |
 | T17 | Lizenz 0BSD | entschieden | hier |
 | T18 | Installationsort | entschieden | hier |
-| T19 | Sprache im Code | offen | m0 |
+| T19 | Sprache im Code | entschieden: Code Englisch, Sichtbares Deutsch | m0 |
 
-## 2 Architektur (Vorschlag, gilt mit T1–T3)
+## 2 Architektur (gilt mit T1–T3)
 
 Cargo-Workspace:
 
 | Crate | Inhalt | ab |
 | ----- | ------ | -- |
-| `welt` | Formate, Meshing, Renderer; ohne Abhängigkeit vom Compositor | M1 |
+| `world` | Formate, Meshing, Renderer; ohne Abhängigkeit vom Compositor | M1 |
 | `viewer` | die Welt als normales Linux-Fenster (M1, M2) | M1 |
-| `compositor` | Smithay; bindet `welt` ein | M0 (Prototyp), M3 |
+| `compositor` | Smithay; bindet `world` ein | M0 (Prototyp), M3 |
 | `shell` | Hotbar, Inventar, Kisten, Explorer | M4 |
 
 Während der Entwicklung läuft alles als Fenster in einem Host-Desktop, der die Super-Taste abfängt. Die Modifier-Taste der Shell ist deshalb konfigurierbar.

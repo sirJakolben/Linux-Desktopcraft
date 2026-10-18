@@ -2,19 +2,6 @@
 
 Sortiert nach Meilenstein; vor dem Konkretisieren eines Meilensteins abarbeiten. Ablauf nach Abschluss: CLAUDE.md, „Pflege".
 
-## M0: Entscheidungen und Prototypen
-
-- **R32** Waylandcraft studieren (nur die Technik, GPL-3.0, keinen Code übernehmen):
-  - dmabuf-Import über EGL
-  - `WorldPlane`: Raycast und Pixel pro Block
-  - Tastaturfang mit `G` und `Alt+Q`
-  - Umgang mit NVIDIA-Problemen
-- **R33** Unsichere Punkte aus der M0-Recherche, im Prototyp klären:
-  - Braucht wgpu den Import fremder Semaphoren, oder reicht Smithays `DrmSyncPointBlocker`? Wann wird der Release-Punkt signalisiert?
-  - Bildet `xwayland-satellite` X11-Override-Redirect-Fenster als `xdg_popup` ab?
-  - Ist `xdg-dialog-v1` in Smithay vorhanden?
-  - Wie kommen wgpu-Bilder auf die DRM-Ausgabe von Smithay (Prototyp-Test P15)?
-
 ## M1: Weltviewer
 
 - **R12** Weltdateien finden:
