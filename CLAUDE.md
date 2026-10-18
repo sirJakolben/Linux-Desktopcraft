@@ -16,7 +16,7 @@ Desktop-Shell als begehbare Minecraft-Welt: Ein eigener Renderer liest echte Wel
 
 IDs bleiben stabil: F = features.md, D = bedienung.md, T = Verzeichnis im Implementierungsplan, R = Recherchen, P = Prototyp-Tests (m0).
 
-Ausführliche Fassung für den Nutzer: `~/Obsidian/jakobs-obsidian/01_Minecraft Shell/`, eine Datei pro Feature-Gruppe mit Fließtext (derzeit noch `featurelist.md` und `designplan.md` als Ganzes). Nicht für die Arbeit lesen.
+Ausführliche Fassung für den Nutzer: `~/Obsidian/jakobs-obsidian/01_Minecraft Shell/`, eine Datei pro Feature-Gruppe mit Fließtext. Nicht für die Arbeit lesen.
 
 ## Pflege
 
