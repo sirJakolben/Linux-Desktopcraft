@@ -17,6 +17,8 @@ glam = "0.30"
 bytemuck = { version = "1", features = ["derive"] }
 pollster = "0.4"
 png = "0.18"
+ash = "0.38"
+libc = "0.2"
 rustix = { version = "1", features = ["event"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

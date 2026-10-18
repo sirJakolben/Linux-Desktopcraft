@@ -1,6 +1,6 @@
 # M0: Entscheidungen und Prototypen
 
-**Planungsstand:** bereit (18.10.2026). E1 ausgeführt, A1–A2 erledigt (18.10.2026).
+**Planungsstand:** bereit (18.10.2026). E1 ausgeführt, A1–A5 erledigt (18.10.2026). Offen: A7, A8; A6 verschoben.
 **Größe:** 1–3 Wochen, Risiko hoch.
 **Voraussetzung:** Linux-Umzug erledigt; Einrichtung E1.
 
@@ -52,7 +52,7 @@ Noch offen, werden durch Prototypen bestätigt:
 
 - **Treiber 615:** Die DRM-Color-Pipeline ab 610 lässt manche Compositors beim Einschalten von HDR schwarz werden; nur bei direkter DRM-Ausgabe relevant (P15, m8), nested nicht. Abhilfe: Modulparameter `nvidia-drm` `color_pipeline` abschalten.
 - **Explicit Sync ist Pflicht** (`linux-drm-syncobj-v1`), sonst gibt es Grafikfehler, weil NVIDIA kein implizites Sync kann. (Waylandcraft bietet kein syncobj an und läuft laut README auf NVIDIA; wie gut, ist unklar.)
-  - Smithays `drm_syncobj` von Anfang an einbauen und nur anbieten, wenn `supports_syncobj_eventfd()` true liefert. Nested den Render-Node (`/dev/dri/renderD128`) selbst als `DrmDeviceFd` öffnen.
+  - Smithays `drm_syncobj` von Anfang an einbauen und nur anbieten, wenn `supports_syncobj_eventfd()` true liefert. Den Render-Node der wgpu-GPU aus Vulkan bestimmen (`VkPhysicalDeviceDrmPropertiesEXT`) und als `DrmDeviceFd` öffnen; hier ist NVIDIA `renderD129`, `renderD128` ist die Intel-iGPU.
   - **Acquire:** Der `DrmSyncPointBlocker` hält den Commit per eventfd zurück, bis der Acquire-Punkt signalisiert ist. wgpu muss deshalb **keine fremden Semaphoren importieren** (kann es auch nicht).
   - **Release:** Smithay signalisiert den Release-Punkt, sobald alle Referenzen auf den Smithay-`Buffer` freigegeben sind. Den `Buffer` also halten, bis die GPU fertig gelesen hat (`Queue::on_submitted_work_done`), erst dann freigeben. In P3 prüfen.
 - **dmabuf-Import** über wgpu-hal `texture_from_dmabuf_fd`, dann `create_texture_from_hal`:
@@ -60,7 +60,7 @@ Noch offen, werden durch Prototypen bestätigt:
   - wgpu nutzt den **expliziten Layout-Pfad** (`VkImageDrmFormatModifierExplicitCreateInfoEXT`). Der bekannte NVIDIA-Fehler dort betrifft nur mehrebenige Formate (NV12); für Puffer mit einer Ebene sollte er gehen (P2). Scheitert er, eigener Import mit dem Listen-Pfad (`VkImageDrmFormatModifierListCreateInfoEXT`) über `texture_from_raw`.
   - Vulkan übernimmt den fd: Smithays fd vorher duplizieren.
   - Import pro dmabuf einmal und zwischenspeichern; Clients wechseln zwischen 2–3 Puffern.
-  - Vor dem Lesen das Bild von der fremden Queue-Familie übernehmen (`QueueFamily::Foreign`), danach zurückgeben.
+  - Vor dem Lesen das Bild von der fremden Queue-Familie übernehmen, danach zurückgeben. Umgesetzt mit `VK_QUEUE_FAMILY_EXTERNAL` per rohem `cmd_pipeline_barrier`: wgpu aktiviert `VK_EXT_queue_family_foreign` nicht, und wgpu-hals Barrieren-API kollidiert mit dem Snatch-Lock (Panik).
   - Die Textur als initialisiert anlegen (`create_texture_from_hal` mit `cleared`), sonst löscht wgpu sie.
   - Nur Puffer mit einer Ebene. Mehrebenige Formate wie NV12-Video erst einmal per Kopie oder gar nicht.
   - Getilte Modifier können als Renderziel scheitern.
@@ -208,3 +208,36 @@ Start: `cargo run -- --spawn foot` in `prototypen/`; Optionen: `cargo run -- --h
 - **P1 offen:** „Update unter einem Frame Verzögerung" nicht gemessen.
 - **Für M3:** nur Damage hochladen; Subsurfaces und Pop-ups zeichnen (bisher nur die Root-Surface); Alpha-Blending.
 - Transitive Abhängigkeiten unter BSD-2/BSD-3, Zlib, ISC (u. a. tiny-skia über winits Fensterdeko): erlaubt nach T17.
+
+### A3 (erledigt 18.10.2026): P2 und P3 bestanden
+
+- dmabuf ohne Kopie: `nested/src/dmabuf.rs`. 28 Format/Modifier-Paare (AR24, XR24, AB24, XB24; nur eine Ebene, importierbar laut Vulkan). Feedback mit dem Render-Node der wgpu-GPU.
+- Importiert und korrekt angezeigt: Modifier `0x0` (linear, `weston-simple-dmabuf-egl`), `0x300000000606014` (vkcube, Firefox), `0x300000000606010` (Firefox). UNORM-Textur, sRGB-Dekodierung im Shader.
+- Explicit Sync: `linux-drm-syncobj-v1` angeboten (Kernel kann `syncobj_eventfd`). vkcube und Firefox nutzen es (Log: „Sync-Weg explizit“). Acquire über `DrmSyncPointBlocker` in calloop; Release: Smithay-`Buffer` werden bis `on_submitted_work_done` gehalten.
+- Ereignisschleife: calloop für Smithay; ein Hilfsthread pollt dessen fd und weckt winit.
+- P3: vkcube 5 min, durchgehend etwa 60 Bilder/s, keine Fehler. Flackern visuell nicht per Video geprüft.
+- **Pro Fenster eine Offscreen-Textur** mit dem ganzen Surface-Baum (`nested/src/window.rs`), Alpha vormultipliziert, Zuschnitt auf die Fenstergeometrie, Viewporter angeboten. Nötig für Firefox (Inhalt in Subsurface). Mip-Kette fehlt noch (P4).
+- **Verdecktes Fenster:** winit liefert unter Wayland `RedrawRequested` erst nach dem Frame-Callback des Hosts; GNOME schickt keinen an verdeckte Fenster. Ohne Gegenmittel stehen alle Clients. Ersatztakt: Frame-Callbacks nach 50 ms ohne Host-Bild.
+- Screenshots: `assets/m0/a3-firefox-vkcube.png`, `assets/m0/a3-vkcube-5min.png`.
+
+### A4 (erledigt 18.10.2026): P5 bestanden
+
+- Raycast Kamera → Quad-Ebene → UV → Fensterpixel → oberste Surface; Strahl fast parallel zur Ebene wird übersprungen.
+- Zeiger, Klicks, Mausrad (v120), Tastatur (evdev-Code + 8, Layout aus GNOME `input-sources`, hier `de`), Cursor-Form der Clients (benannte Cursor).
+- Platzhalter: Klick auf Screen = Tastaturfokus; Klick in die Welt = Kamera (Maus gefangen); Fluchttaste **Strg+Esc** (von GNOME nicht belegt).
+- Genauigkeit über das Testskript: Abweichung ≤ 0,01 px bei allen Zielen, auch 9 px kleine Pfeile am Rand.
+- GTK4 (`gtk4-widget-factory`) und Qt (`gallery`) schräg bedienbar: Text tippen, Kästchen, Zahlenfeld, Scrollen. Screenshots `assets/m0/a4-*.png`.
+- **Testskript** für Abnahmen ohne Hand an der Maus: `--script DATEI`, Format im Kopf von `nested/src/script.rs`, Beispiele `prototypen/scripts/a4-input.txt`, `a5-popups.txt`. Echte Eingaben werden während des Skripts ignoriert.
+
+### A5 (erledigt 18.10.2026): P6 teilweise
+
+- Pop-ups als eigene Quads in der Ebene ihres Screens, je Ebene 2 mm davor; der Raycast testet sie vor dem Fenster.
+- Constraint-Fläche: Fensterrechteck plus 32 px Rand (`POPUP_MARGIN`). `reposition` umgesetzt.
+- Grab: Klick außerhalb schließt alle Pop-ups (`popup_done`, innerstes zuerst) und wird nicht weitergegeben; Tastaturfokus geht an das Pop-up und danach zurück.
+- Bestanden: GTK-Kontextmenü an der richtigen Stelle, Schließen per Klick in die Welt; Qt-Combobox öffnet sich richtig, Auswahl per Tastatur wirkt. Screenshots `assets/m0/a5-*.png`.
+- **Offen (für M3):** verschachteltes Menü, Tooltip, Firefox-Menüs nicht getestet. Smithay loggt „surface missing from known popups“ (Grab-Anfrage für ein Pop-up, das Smithay nicht mehr kennt); kein Protokollfehler an den Client, Ursache ungeklärt.
+
+### Für M8 Teil 1 (P15)
+
+- wgpu-hal bietet `Instance::create_surface_from_drm` (`VK_EXT_acquire_drm_display`): mögliche direkte Ausgabe auf DRM ohne GLES.
+

@@ -1,0 +1,21 @@
+# A5: Pop-ups in GTK4 (Screen 1) und Qt (Screen 0).
+# Start: nested --camera 0,1.5,2.5,0,-4 --spawn gtk4-widget-factory --spawn /usr/lib64/qt6/examples/widgets/gallery/bin/gallery --script scripts/a5-popups.txt
+wait 6
+# GTK: Kontextmenü im Eingabefeld, dann Klick in den Himmel schließt es
+point 1 200 249
+click right
+wait 1
+screenshot OUT/a5-gtk-kontextmenue.png
+cursor 800 60
+click left
+wait 1
+# Qt: Combobox "Style" öffnen, mit Pfeil runter + Enter einen anderen Stil wählen
+point 0 170 24
+click left
+wait 1
+screenshot OUT/a5-qt-combobox.png
+key ArrowDown
+key Enter
+wait 1
+windowshot 0 OUT/a5-qt-nachher.png
+quit

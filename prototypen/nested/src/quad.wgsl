@@ -5,7 +5,8 @@ struct Camera {
 struct Quad {
     model: mat4x4<f32>,
     uv_scale: vec2<f32>,
-    _pad: vec2<f32>,
+    // x: decode sRGB (imported UNORM textures), y: flip vertically.
+    flags: vec2<f32>,
 }
 
 @group(0) @binding(0) var<uniform> camera: Camera;
@@ -26,8 +27,12 @@ fn vs_main(@builtin(vertex_index) index: u32) -> VertexOutput {
         vec2(0.0, 0.0), vec2(0.0, 1.0), vec2(1.0, 1.0),
         vec2(0.0, 0.0), vec2(1.0, 1.0), vec2(1.0, 0.0),
     );
-    let uv = corners[index];
-    let local = vec4(uv.x - 0.5, 0.5 - uv.y, 0.0, 1.0);
+    let corner = corners[index];
+    let local = vec4(corner.x - 0.5, 0.5 - corner.y, 0.0, 1.0);
+    var uv = corner;
+    if quad.flags.y > 0.5 {
+        uv.y = 1.0 - uv.y;
+    }
     var out: VertexOutput;
     out.position = camera.view_proj * quad.model * local;
     out.uv = uv * quad.uv_scale;
@@ -36,8 +41,17 @@ fn vs_main(@builtin(vertex_index) index: u32) -> VertexOutput {
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    let color = textureSample(quad_texture, quad_sampler, in.uv);
+    var color = textureSample(quad_texture, quad_sampler, in.uv).rgb;
+    if quad.flags.x > 0.5 {
+        color = srgb_to_linear(color);
+    }
     // Window contents are premultiplied; until blending exists, draw them
     // over black so translucent pixels stay visible but darker.
-    return vec4(color.rgb, 1.0);
+    return vec4(color, 1.0);
+}
+
+fn srgb_to_linear(c: vec3<f32>) -> vec3<f32> {
+    let low = c / 12.92;
+    let high = pow((c + 0.055) / 1.055, vec3(2.4));
+    return select(high, low, c <= vec3(0.04045));
 }

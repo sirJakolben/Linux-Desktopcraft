@@ -1043,8 +1043,10 @@ dependencies = [
 name = "nested"
 version = "0.1.0"
 dependencies = [
+ "ash",
  "bytemuck",
  "glam 0.30.10",
+ "libc",
  "png",
  "pollster",
  "rustix 1.1.5",

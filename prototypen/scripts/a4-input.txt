@@ -1,0 +1,50 @@
+# A4: Eingabe per Raycast in GTK4 (Screen 1) und Qt (Screen 0).
+# Start: nested --spawn gtk4-widget-factory --spawn /usr/lib64/qt6/examples/widgets/gallery/bin/gallery --script scripts/a4-input.txt
+wait 6
+windowshot 1 OUT/a4-gtk-vorher.png
+windowshot 0 OUT/a4-qt-vorher.png
+
+# GTK: Text in das Feld "entry" tippen
+point 1 200 249
+click left
+key ControlLeft+KeyA
+type Hallo Welt
+# GTK: zweites Kontrollkästchen (am linken Rand) anklicken
+point 1 22 453
+click left
+# GTK: Plus-Knopf des Zahlenfelds
+point 1 212 381
+click left
+click left
+# GTK: Lorem-Text scrollen
+point 1 1290 470
+scroll 3
+# GTK: Hover über dem obersten togglebutton
+point 1 500 73
+wait 1
+windowshot 1 OUT/a4-gtk-nachher.png
+
+# Qt: Tri-state-Kästchen, Radio button 3, Pfeil am rechten Rand des Zahlenfelds
+point 0 246 212
+click left
+point 0 246 182
+click left
+point 0 993 152
+click left
+click left
+click left
+# Qt: in den Text tippen
+point 0 860 457
+click left
+key End
+type  Hallo aus der Welt
+# Qt: Baumansicht mit dem Mausrad
+point 0 260 450
+scroll 2
+wait 1
+windowshot 0 OUT/a4-qt-nachher.png
+
+# Tastatur zurück an die Welt (Fluchttaste Strg+Esc)
+key ControlLeft+Escape
+screenshot OUT/a4-szene.png
+quit
