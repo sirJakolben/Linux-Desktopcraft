@@ -12,7 +12,6 @@ Desktop-Shell als begehbare Minecraft-Welt: Ein eigener Renderer liest echte Wel
 | `implementierung/m0-…` bis `m9-…` | je ein Meilenstein: Planungsstand, Kern, T-Details, Technik, Abnahme | Arbeit an diesem Meilenstein |
 | [recherche-offen.md](implementierung/recherche-offen.md) | ausstehende Recherchen R… | Recherchen |
 | [recherche-ergebnisse.md](implementierung/recherche-ergebnisse.md) | Funde mit Quellen (Archiv) | nur wenn Belege gebraucht werden |
-| [linux-umzug.md](linux-umzug.md), `prompts/` | Linux-Umzug des Nutzers | nur dafür |
 
 IDs bleiben stabil: F = features.md, D = bedienung.md, T = Verzeichnis im Implementierungsplan, R = Recherchen, P = Prototyp-Tests (m0).
 

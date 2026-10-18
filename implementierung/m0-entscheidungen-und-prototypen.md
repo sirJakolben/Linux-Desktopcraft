@@ -2,7 +2,7 @@
 
 **Planungsstand:** bereit (18.10.2026). E1 ausgeführt, A1–A5 erledigt (18.10.2026). Offen: A7, A8; A6 verschoben.
 **Größe:** 1–3 Wochen, Risiko hoch.
-**Voraussetzung:** Linux-Umzug erledigt; Einrichtung E1.
+**Voraussetzung:** Einrichtung E1.
 
 ## Ziel
 

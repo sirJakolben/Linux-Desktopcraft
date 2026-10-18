@@ -102,7 +102,7 @@ Hotbar = Taskleiste, Inventar = Desktop, Kiste = Ordner, Nether-Portal = Weltenw
 
 | Nr. | Frage |
 | --- | ----- |
-| F1 | Linux-Details: Kommen Windows-Programme in die Welt (nur Linux-Apps oder Wine/Proton)? Welcher Launcher unter Linux (offiziell, Prism …)? Distribution: Fedora ist installiert (linux-umzug.md), damit entschieden? |
+| F1 | Linux-Details: Kommen Windows-Programme in die Welt (nur Linux-Apps oder Wine/Proton)? Welcher Launcher unter Linux (offiziell, Prism …)? Distribution: Fedora ist installiert (m0 T4), damit entschieden? |
 | F2 | Sprache und Grafik-API: → T1 |
 | F3 | Recht bei Veröffentlichung: EULA, Nutzungsrichtlinien, Lizenzen übersetzter Shader. „Minecraft" darf laut Richtlinien nicht Hauptname sein: Wie heißt das Projekt? (R26) |
 | F4 | Freisteuerung: welche Teilmenge der Bewegung (Kollision, Schwerkraft, Springen, Schwimmen, Leitern …)? Zwischen Waypoints mit Kollision oder geradlinig? |

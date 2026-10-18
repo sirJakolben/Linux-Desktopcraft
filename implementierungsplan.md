@@ -11,7 +11,7 @@
   - `cargo fmt` und `cargo clippy -- -D warnings` sauber; Tests gehören zu jedem Baustein.
   - `unsafe` nur in wenigen kleinen Modulen (dmabuf-Import, Vulkan-Interop), jedes mit Kommentar zur Sicherheitsbegründung.
 - **T17 Lizenz 0BSD:** `LICENSE` kommt mit dem ersten Code ins Repository. Abhängigkeiten unter freizügigen Lizenzen (MIT, Apache, BSD, Zlib, ISC) sind in Ordnung, Copyleft nicht (Nutzer 18.10.2026).
-- **T18 Installationsort:** Linux in 500 GB auf der NVMe-SSD mit eigener EFI-Partition (die von Windows hat nur 100 MB), damit Windows später ohne Umbau gelöscht werden kann. Details: [linux-umzug.md](linux-umzug.md).
+- **T18 Installationsort:** Linux in 500 GB auf der NVMe-SSD mit eigener EFI-Partition (die von Windows hat nur 100 MB), damit Windows später ohne Umbau gelöscht werden kann.
 - **Hardware:** RTX 5060 Ti (Blackwell) mit 16 GB VRAM; NVMe-SSD WD_BLACK SN850X 2 TB; HDD Toshiba 1 TB (D:).
 
 ### Verzeichnis aller T-Entscheidungen
@@ -67,7 +67,6 @@ Reihenfolge (Nutzer 18.10.2026): M0 bis A5 → **M8 Teil 1**: eigene Login-Sitzu
 
 | Datei | Inhalt |
 | ----- | ------ |
-| [linux-umzug.md](linux-umzug.md) | Umstieg auf Linux, Voraussetzung für M0 |
 | [m0](implementierung/m0-entscheidungen-und-prototypen.md) | Grundsatzentscheidungen, Fenster-Prototyp, Prototyp-Tests P1–P17, NVIDIA- und Fenstertechnik |
 | [m1](implementierung/m1-weltviewer.md) | Welt lesen, Meshes, Navigation |
 | [m2](implementierung/m2-minecraft-look.md) | Licht, Himmel, Animationen, Transparenz, Pause |
